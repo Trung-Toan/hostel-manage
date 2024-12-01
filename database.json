@@ -1,0 +1,57 @@
+{
+    "user": [
+        { "id": "1", "fullName": "Customer User", "username": "customer", "email": "toantthe172722@fpt.edu.vn", "phoneNumber": "0123456789", "persionalAuth": "0123456789098", "password": "customer123", "dob": "1999-01-01", "address": "Long Biên, Hà Nội", "avatar": "image_customer", "status": 1, "role": 0, "createdAt": "2024-11-16 14:30:00", "updatedAt": "2024-11-16 15:00:00" },
+        { "id": "2", "fullName": "Owner User", "username": "owner", "email": "owner@gmail.com", "phoneNumber": "0987654321", "persionalAuth": "0123456789127", "password": "owner123", "dob": "1980-01-01", "address": "Ba Đình, Hà Nội", "avatar": "image_owner", "status": 1, "role": 1, "createdAt": "2024-11-16 14:00:00", "updatedAt": "2024-11-16 14:00:00" }
+    ],
+    
+    "hostel": [
+        { "id": "1", "name": "Nhà trọ Thanh Xuân", "description": "Tòa nhà 4 tầng với 15 phòng, gần trường Đại học Hà Nội.", "address": "Số 10, Thanh Xuân, Hà Nội", "ownerId": "2", "status": 1, "images": ["hostel1_img1", "hostel1_img2"], "regionId": "1", "createdAt": "2024-11-20 08:00:00", "updatedAt": "2024-11-20 08:30:00" },
+        { "id": "2", "name": "Nhà trọ Ba Đình", "description": "Khu trọ rộng rãi, gần hồ Tây, có bảo vệ 24/7.", "address": "Số 25, Ba Đình, Hà Nội", "ownerId": "2", "status": 1, "images": ["hostel2_img1", "hostel2_img2"], "regionId": "2", "createdAt": "2024-11-20 08:00:00", "updatedAt": "2024-11-20 08:30:00" }
+    ],
+
+    "room": [
+        { "id": "1", "hostelId": "1", "name": "Phòng 101", "description": "Phòng đầy đủ tiện nghi, có ban công.", "price": 3500000, "area": 25, "status": 1, "categoryId": "1", "utilities": ["1", "2"], "images": ["room1_img1", "room1_img2"], "currentOccupants": 2, "createdAt": "2024-11-20 10:00:00", "updatedAt": "2024-11-20 12:00:00" },
+        { "id": "2", "hostelId": "1", "name": "Phòng 102", "description": "Phòng có cửa sổ, thích hợp cho sinh viên.", "price": 3000000, "area": 20, "status": 1, "categoryId": "1", "utilities": ["2", "3"], "images": ["room2_img1", "room2_img2"], "currentOccupants": 1, "createdAt": "2024-11-20 10:00:00", "updatedAt": "2024-11-20 12:00:00" },
+        { "id": "3", "hostelId": "2", "name": "Phòng 201", "description": "Phòng lớn dành cho gia đình, gần công viên.", "price": 5000000, "area": 35, "status": 1, "categoryId": "2", "utilities": ["1", "3", "4"], "images": ["room3_img1", "room3_img2"], "currentOccupants": 3, "createdAt": "2024-11-20 10:00:00", "updatedAt": "2024-11-20 12:00:00" }
+    ],
+
+    "category": [
+        { "id": "1", "name": "Phòng trọ mini", "description": "Phòng nhỏ dành cho sinh viên hoặc người độc thân.", "createdAt": "2024-11-20 08:00:00", "updatedAt": "2024-11-20 08:30:00" },
+        { "id": "2", "name": "Phòng gia đình", "description": "Phòng rộng rãi, phù hợp cho gia đình.", "createdAt": "2024-11-20 08:00:00", "updatedAt": "2024-11-20 08:30:00" }
+    ],
+
+    "utilities": [
+        { "id": "1", "name": "Điều hòa", "description": "Điều hòa không khí." },
+        { "id": "2", "name": "Nước nóng", "description": "Máy nước nóng." },
+        { "id": "3", "name": "Internet", "description": "Wi-Fi tốc độ cao." },
+        { "id": "4", "name": "Bãi đỗ xe", "description": "Chỗ đỗ xe miễn phí." }
+    ],
+
+    "region": [
+        { "id": "1", "name": "Thanh Xuân" },
+        { "id": "2", "name": "Ba Đình" }
+    ],
+
+    "post": [
+        { "id": "1", "title": "Cho thuê phòng trọ Thanh Xuân giá rẻ", "content": "Phòng trọ gần trường đại học, tiện ích đầy đủ.", "hostelId": "1", "ownerId": "2", "status": 1, "images":"post1_img1", "createdAt": "2024-11-20 15:00:00", "updatedAt": "2024-11-20 15:30:00" },
+        { "id": "2", "title": "Phòng trọ Ba Đình cao cấp", "content": "Không gian rộng rãi, gần hồ Tây, giá cả hợp lý.", "hostelId": "2", "ownerId": "2", "status": 1, "images": "post2_img1", "createdAt": "2024-11-20 16:00:00", "updatedAt": "2024-11-20 16:30:00" }
+    ],
+
+    "likes": [
+        { "id": "1", "postId": "1", "userId": "1", "createdAt": "2024-11-21 09:00:00" },
+        { "id": "2", "postId": "1", "userId": "2", "createdAt": "2024-11-21 09:15:00" },
+        { "id": "3", "postId": "2", "userId": "1", "createdAt": "2024-11-21 10:00:00" }
+    ],
+
+    "comments": [
+        { "id": "1", "postId": "1", "userId": "1", "content": "Phòng trọ này rất tốt, giá cả hợp lý!", "createdAt": "2024-11-21 09:05:00", "updatedAt": null },
+        { "id": "2", "postId": "1", "userId": "2", "content": "Tôi đang quan tâm, liên hệ thế nào?", "createdAt": "2024-11-21 09:20:00", "updatedAt": null },
+        { "id": "3", "postId": "2", "userId": "1", "content": "Vị trí tuyệt vời, gần công viên và tiện ích!", "createdAt": "2024-11-21 10:10:00", "updatedAt": null }
+    ],
+    
+    "invoice": [
+        { "id": "1", "roomId": "1", "month": "2024-11", "priceRoom": 3500000, "electricityUsage": 50, "priceElectricity": 3500, "waterUsage": 10, "priceWater": 15000, "servicePricePerPerson": 100000, "serviceFee": 200000, "totalAmount": 4000000, "createdAt": "2024-11-30 10:00:00", "updatedAt": "2024-11-30 12:00:00" },
+        { "id": "2", "roomId": "2", "month": "2024-11", "priceRoom": 3000000, "electricityUsage": 30, "priceElectricity": 3500, "waterUsage": 8, "priceWater": 15000, "servicePricePerPerson": 100000, "serviceFee": 100000, "totalAmount": 3350000, "createdAt": "2024-11-30 10:00:00", "updatedAt": "2024-11-30 12:00:00" },
+        { "id": "3", "roomId": "3", "month": "2024-11", "priceRoom": 5000000, "electricityUsage": 70, "priceElectricity": 3500, "waterUsage": 12, "priceWater": 15000, "servicePricePerPerson": 100000, "serviceFee": 300000, "totalAmount": 5405000, "createdAt": "2024-11-30 10:00:00", "updatedAt": "2024-11-30 12:00:00" }
+    ]
+}
