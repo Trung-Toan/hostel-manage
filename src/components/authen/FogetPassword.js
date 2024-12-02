@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState, useCallback } from "react";
 import {
   Alert,
   Button,
@@ -13,18 +13,50 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useGetUserByID, useUpdateUser } from "../../fetchData/DataFetch";
 
+// Tách riêng PasswordInput để ngăn render không cần thiết
+const PasswordInput = memo(
+  ({
+    label,
+    name,
+    value,
+    onChange,
+    onBlur,
+    isInvalid,
+    show,
+    toggleShow,
+  }) => (
+    <Form.Group className="mb-3">
+      <Form.Label>{label}</Form.Label>
+      <InputGroup>
+        <Form.Control
+          type={show ? "text" : "password"}
+          placeholder={`Nhập ${label.toLowerCase()}`}
+          name={name}
+          value={value}
+          onBlur={onBlur}
+          onChange={onChange}
+          isInvalid={!!isInvalid}
+        />
+        <Button variant="outline-secondary" onClick={toggleShow} type="button">
+          {show ? <EyeSlash /> : <Eye />}
+        </Button>
+        <Form.Control.Feedback type="invalid">{isInvalid}</Form.Control.Feedback>
+      </InputGroup>
+    </Form.Group>
+  )
+);
+
 const ForgetPassword = ({ email }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
   const [messageError, setMessageError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [userUpdate, setUserUpdate] = useState(null); // Thêm state để cập nhật dữ liệu người dùng
   const navigate = useNavigate();
   const { uid } = useParams();
   const { user, loadingUser } = useGetUserByID(uid);
 
   // Gọi hook useUpdateUser
-  const { isUpdate, updateError } = useUpdateUser(uid, userUpdate);
+  const { isUpdate, updateError, updateUser } = useUpdateUser();
 
   useEffect(() => {
     if (!email || (!loadingUser && (!user || user?.email !== email))) {
@@ -32,7 +64,6 @@ const ForgetPassword = ({ email }) => {
     }
   }, [email, navigate, user, loadingUser]);
 
-  // Theo dõi trạng thái cập nhật
   useEffect(() => {
     if (isUpdate) {
       navigate("/login");
@@ -61,46 +92,27 @@ const ForgetPassword = ({ email }) => {
     onSubmit: async (values) => {
       setSubmitting(true);
       try {
-        setUserUpdate({ ...user, password: values.password });
+        if (user && uid === user.id) {
+          await updateUser(uid, { ...user, password: values.password });
+        } else {
+          setMessageError("Không thể thay đổi mật khẩu");
+        }
       } catch (error) {
         setMessageError("Đã xảy ra lỗi, vui lòng thử lại sau.");
+        console.log(error);
       } finally {
         setSubmitting(false);
       }
     },
   });
 
-  const PasswordInput = ({
-    label,
-    name,
-    value,
-    onChange,
-    onBlur,
-    isInvalid,
-    show,
-    toggleShow,
-  }) => (
-    <Form.Group className="mb-3">
-      <Form.Label>{label}</Form.Label>
-      <InputGroup>
-        <Form.Control
-          type={show ? "text" : "password"}
-          placeholder={`Nhập ${label.toLowerCase()}`}
-          name={name}
-          value={value}
-          onBlur={onBlur}
-          onChange={onChange}
-          isInvalid={isInvalid}
-        />
-        <Button variant="outline-secondary" onClick={toggleShow} type="button">
-          {show ? <EyeSlash /> : <Eye />}
-        </Button>
-        <Form.Control.Feedback type="invalid">
-          {isInvalid}
-        </Form.Control.Feedback>
-      </InputGroup>
-    </Form.Group>
-  );
+  const toggleShowPassword = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
+
+  const toggleShowRePassword = useCallback(() => {
+    setShowRePassword((prev) => !prev);
+  }, []);
 
   return (
     <>
@@ -128,9 +140,9 @@ const ForgetPassword = ({ email }) => {
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              isInvalid={!!formik.errors.password && formik.touched.password}
+              isInvalid={formik.touched.password && formik.errors.password}
               show={showPassword}
-              toggleShow={() => setShowPassword(!showPassword)}
+              toggleShow={toggleShowPassword}
             />
             <PasswordInput
               label="Nhập lại mật khẩu"
@@ -138,11 +150,9 @@ const ForgetPassword = ({ email }) => {
               value={formik.values.rePassword}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              isInvalid={
-                !!formik.errors.rePassword && formik.touched.rePassword
-              }
+              isInvalid={formik.touched.rePassword && formik.errors.rePassword}
               show={showRePassword}
-              toggleShow={() => setShowRePassword(!showRePassword)}
+              toggleShow={toggleShowRePassword}
             />
             <Button
               type="submit"

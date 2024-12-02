@@ -133,45 +133,33 @@ function useGetUserByID(id) {
   return { user, loadingUser };
 }
 
-function useUpdateUser(id, userUpdate) {
+function useUpdateUser() {
   const [isUpdate, setIsUpdate] = useState(false);
   const [updateError, setUpdateError] = useState(null);
-  const [user, setUser] = useState(null);
+  const [userUD, setUserUD] = useState(null); // Đổi tên biến từ user -> userUD
 
-  useEffect(() => {
-    let isMounted = true;
-    const updateUser = async () => {
-      try {
-        const response = await fetch(`http://localhost:9999/user/${id}`, {
-          method: "PUT",
-          body: JSON.stringify(userUpdate),
-          headers: { "Content-Type": "application/json; charset=UTF-8" },
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to update user with ID: ${id}`);
-        }
-        const data = await response.json();
-        if (isMounted) {
-          setUser(data);
-          setIsUpdate(true);
-        }
-      } catch (error) {
-        if (isMounted) {
-          setUpdateError(new Error(`Failed to update user: ${error.message}`));
-        }
-      }
-    };
-
+  const updateUser = async (id, userUpdate) => {
     setIsUpdate(false); // Reset trạng thái trước khi cập nhật mới
-    if (id && userUpdate) updateUser();
+    try {
+      const response = await fetch(`http://localhost:9999/user/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(userUpdate),
+        headers: { "Content-Type": "application/json; charset=UTF-8" },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to update user with ID: ${id}`);
+      }
+      const data = await response.json();
+      setUserUD(data); // Gán dữ liệu vào userUD
+      setIsUpdate(true);
+    } catch (error) {
+      setUpdateError(new Error(`Failed to update user: ${error.message}`));
+    }
+  };
 
-    return () => {
-      isMounted = false;
-    };
-  }, [id, userUpdate]);
-
-  return { isUpdate, updateError, user };
+  return { isUpdate, updateError, userUD, updateUser }; // Trả về userUD thay vì user
 }
+
 
 export {
   useUpdateUser,

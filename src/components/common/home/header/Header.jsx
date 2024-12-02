@@ -9,8 +9,6 @@ const Header = ({login = false}) => {
   const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("user")));
   const isLoggedIn = login;
   const navigate = useNavigate();
-  console.log(user);
-  console.log(isLoggedIn);
 
   const onLogout = () => {
     sessionStorage.removeItem("user");

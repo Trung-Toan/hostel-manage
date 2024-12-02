@@ -33,7 +33,6 @@ const EditInformation = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Updated User Information:", user);
     alert("Thông tin đã được cập nhật thành công!");
   };
 
