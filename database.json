@@ -3,6 +3,8 @@
     {
       "id": "1",
       "fullName": "Customer User",
+      "roomID": "1",
+      "statusRoom": "1",
       "username": "customer",
       "email": "toantthe172722@fpt.edu.vn",
       "phoneNumber": "0123456789",
@@ -19,6 +21,8 @@
     {
       "id": "2",
       "fullName": "Owner User",
+      "roomID": "",
+      "statusRoom": "0",
       "username": "owner",
       "email": "owner@gmail.com",
       "phoneNumber": "0987654321",
@@ -261,7 +265,8 @@
       "priceWater": 15000,
       "servicePricePerPerson": 100000,
       "serviceFee": 200000,
-      "totalAmount": 4000000,
+      "totalAmount": 4025000,
+      "status": "1",
       "createdAt": "2024-11-30 10:00:00",
       "updatedAt": "2024-11-30 12:00:00"
     },
@@ -277,6 +282,7 @@
       "servicePricePerPerson": 100000,
       "serviceFee": 100000,
       "totalAmount": 3350000,
+      "status": "1",
       "createdAt": "2024-11-30 10:00:00",
       "updatedAt": "2024-11-30 12:00:00"
     },
@@ -292,6 +298,7 @@
       "servicePricePerPerson": 100000,
       "serviceFee": 300000,
       "totalAmount": 5405000,
+      "status": "0",
       "createdAt": "2024-11-30 10:00:00",
       "updatedAt": "2024-11-30 12:00:00"
     }

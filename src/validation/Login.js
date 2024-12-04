@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useGetAllUser } from "../fetchData/DataFetch";
 
 function useLogin() {
@@ -14,10 +13,6 @@ function useLogin() {
         (u.username === username || u.email === username) &&
         u.password === password
     );
-
-    if (findUser) {
-      sessionStorage.setItem("user", JSON.stringify(findUser));
-    }
 
     return { findUser, loadingUser: false };
   };

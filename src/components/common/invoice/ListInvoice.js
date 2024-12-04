@@ -1,5 +1,5 @@
 // ListInvoice.js
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Accordion, Table, Badge, Container, Spinner } from "react-bootstrap";
 import {
   Calendar,
@@ -10,14 +10,29 @@ import {
 } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import BackToHome from "../BackToHome";
+import { useFetchData } from "../../../fetchData/DataFetch";
 
 const ListInvoice = ({ user, invoices, loading }) => {
-  // Lọc hóa đơn của phòng thuê theo điều kiện phòng thuê là "1"
-  const tenantRoomId = "1"; // Bạn có thể thay đổi giá trị này theo phòng thuê cụ thể
+  const [room, setRoom] = useState({});
+  const {getData} = useFetchData();
+
+  const tenantRoomId = user?.roomID; 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (tenantRoomId) {
+        const data = await getData(`http://localhost:9999/room/${tenantRoomId}`);
+        if (data) {
+          setRoom(data);
+        }
+      }
+    };
+    fetchData();
+  }, [tenantRoomId]);
+  
   const filteredInvoices = invoices
     .filter((invoice) => invoice.roomId === tenantRoomId)
     .sort((a, b) => new Date(a.month) - new Date(b.month)); // Sắp xếp theo tháng từ bé đến lớn
-
   // Nhóm hóa đơn theo tháng sau khi đã lọc và sắp xếp
   const groupedInvoices = filteredInvoices.reduce((acc, invoice) => {
     const { month } = invoice;
@@ -42,7 +57,7 @@ const ListInvoice = ({ user, invoices, loading }) => {
         </div>
       ) : (
         <Accordion defaultActiveKey={(Object.keys(groupedInvoices).length - 1).toString()}>
-          {Object.keys(groupedInvoices).map((month, index) => (
+          {Object.keys(groupedInvoices)?.map((month, index) => (
             <Accordion.Item eventKey={index.toString()} key={month}>
               {/* Tiêu đề của mỗi tháng */}
               <Accordion.Header>
@@ -76,12 +91,12 @@ const ListInvoice = ({ user, invoices, loading }) => {
                         </td>
                         <td className="text-center">
                           <House className="me-2" />
-                          {invoice.roomId}
+                          {room.name}
                         </td>
                         <td className="text-center">{invoice.month}</td>
                         <td className="text-center">{invoice.totalAmount.toLocaleString("vi-VN")} ₫</td>
                         <td className="text-center">
-                          {invoice.status === "paid" ? (
+                          {invoice.status === "1" ? (
                             <Badge bg="success">
                               <CheckCircle className="me-2" />
                               Đã thanh toán

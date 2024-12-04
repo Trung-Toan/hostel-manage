@@ -160,8 +160,23 @@ function useUpdateUser() {
   return { isUpdate, updateError, userUD, updateUser }; // Trả về userUD thay vì user
 }
 
+function useFetchData() {
+  const getData = async (url) => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Fail to load data`);
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error(`Error loading URL "${url}":`, error);
+      return null; 
+    }
+  };
+  return { getData };
+}
 
 export {
+  useFetchData,
   useUpdateUser,
   useGetUserByID,
   useGetAllInvoices,

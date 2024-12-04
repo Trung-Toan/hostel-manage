@@ -4,22 +4,7 @@ import BackToHome from '../BackToHome';
 import { Link } from 'react-router-dom';
 
 const Information = () => {
-    const user = {
-        id: "1",
-        fullName: "Customer User",
-        username: "customer",
-        email: "customer@gmail.com",
-        phoneNumber: "0123456789",
-        persionalAuth: "0123456789098",
-        password: "customer123",
-        dob: "1999-01-01",
-        address: "Long Biên, Hà Nội",
-        avatar: "https://via.placeholder.com/150", // Thay bằng đường dẫn avatar thực tế
-        status: 1,
-        role: 0,
-        createdAt: "2024-11-16 14:30:00",
-        updatedAt: "2024-11-16 15:00:00",
-      };
+    const user = JSON.parse(sessionStorage.getItem("user"));
     
       const renderRole = (role) => {
         return role === 0 ? "User" : "Admin";

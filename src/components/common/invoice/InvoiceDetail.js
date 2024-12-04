@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Container,
   Card,
@@ -18,12 +18,27 @@ import {
   ExclamationCircle,
 } from "react-bootstrap-icons";
 import { useParams, Link } from "react-router-dom";
-import { useGetInvoiceById } from "../../../fetchData/DataFetch";
+import { useFetchData, useGetInvoiceById } from "../../../fetchData/DataFetch";
 import BackToHome from "../BackToHome";
 
 const InvoiceDetail = () => {
   const { idInvoice } = useParams();
   const { invoice, loading } = useGetInvoiceById(idInvoice);
+  const [room, setRoom] = useState({});
+  const {getData} = useFetchData();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (invoice) {
+        const data = await getData(`http://localhost:9999/room/${invoice.roomId}`);
+        if (data) {
+          setRoom(data);
+        }
+      }
+    };
+    fetchData();
+  }, [invoice]);
+
 
   // Check if invoice data is loaded
   if (Object.keys(invoice).length === 0 || !invoice) {
@@ -86,7 +101,7 @@ const InvoiceDetail = () => {
               <Col md={8}>
                 <div>
                   <House className="me-2" />
-                  Phòng: <strong>{invoice.roomId || "N/A"}</strong>
+                  Phòng: <strong>{room.name || "N/A"}</strong>
                 </div>
                 <div>
                   <Calendar className="me-2" />
@@ -117,8 +132,8 @@ const InvoiceDetail = () => {
                 {/* tiền phòng */}
                 <tr>
                   <td>Tiền thuê phòng</td>
-                  <td>Phòng </td>
-                  <td className="text-end">-</td>
+                  <td>{room.name || "-"}</td>
+                  <td className="text-end">{(room.price || "-").toLocaleString("vi-VN")}{" "} ₫ </td>
                   <td className="text-end">
                     {(invoice.priceRoom || 0).toLocaleString("vi-VN")} ₫
                   </td>
@@ -164,7 +179,7 @@ const InvoiceDetail = () => {
                 {/* tiền dịch vụ */}
                 <tr>
                   <td>Phí dịch vụ</td>
-                  <td>-</td>
+                  <td>{room.currentOccupants} người</td>
                   <td className="text-end">
                     {(invoice.servicePricePerPerson || 0).toLocaleString(
                       "vi-VN"

@@ -9,7 +9,7 @@ import { useLogin } from "../../validation/Login";
 const Login = ({ user, handelIsLogin }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
   const { loginToSystem } = useLogin();
 
   const togglePasswordVisibility = () => {
@@ -31,15 +31,20 @@ const Login = ({ user, handelIsLogin }) => {
     }),
     onSubmit: async (values) => {
       try {
-        const { findUser } = await loginToSystem(values.username, values.password);
-
+        const { findUser } = await loginToSystem(
+          values.username,
+          values.password
+        );
         if (!findUser) {
-          setErrorMessage("Tên đăng nhập hoặc mật khẩu không đúng. Vui lòng thử lại.");
+          setErrorMessage(
+            "Tên đăng nhập hoặc mật khẩu không đúng. Vui lòng thử lại."
+          );
         } else {
-          setErrorMessage(""); // Reset thông báo lỗi khi đăng nhập thành công
+          sessionStorage.setItem("user", JSON.stringify(findUser));
+          setErrorMessage("");
           handelIsLogin(true);
-          navigate("/"); 
-          
+          if (findUser.role === 0) navigate("/");
+          else if(findUser.role === 1) navigate("/admin");
         }
       } catch (error) {
         setErrorMessage("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
@@ -105,12 +110,17 @@ const Login = ({ user, handelIsLogin }) => {
         </Form.Group>
 
         {/* Nút đăng nhập */}
-        <Button variant="warning" type="submit" className="w-100" disabled={formik.isSubmitting}>
+        <Button
+          variant="warning"
+          type="submit"
+          className="w-100"
+          disabled={formik.isSubmitting}
+        >
           {formik.isSubmitting ? "Đang xử lý..." : "Đăng nhập"}
         </Button>
       </Form>
       <p className="text-center mt-3">
-        Quên mật khẩu ? {" "}
+        Quên mật khẩu ?{" "}
         <Link to="/find_email" className="text-warning">
           Tìm tài khoản
         </Link>
