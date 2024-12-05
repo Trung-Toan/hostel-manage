@@ -6,7 +6,6 @@ const HomePageAdmin = () => {
     return (
         <div>
             <AdminHeader/>
-            this is home page for admin
             <Outlet />
         </div>
     );

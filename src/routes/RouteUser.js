@@ -47,11 +47,8 @@ const RouteUser = ({isLogin, handelIsLogin, userLogin}) => {
           index
           element={<ViewPort posts={posts} loadingPost={loadingPost} />}
         />
-        <Route path="information" element={<Information />} />
-        <Route
-          path="information/edit_information"
-          element={<EditInformation />}
-        />
+        <Route path="information" element={<Information userLogin = {userLogin} />} />
+        <Route path="information/edit_information" element={<EditInformation userLogin = {userLogin} />}/>
         <Route path="change_password" element={<ChangePassword />} />
         <Route
           path="list_invoice"

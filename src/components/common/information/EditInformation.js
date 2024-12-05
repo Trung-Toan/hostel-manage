@@ -11,8 +11,8 @@ import {
 import { Link } from "react-router-dom";
 import BackToHome from "../BackToHome";
 
-const EditInformation = () => {
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("user")));
+const EditInformation = ({userLogin}) => {
+  const [user, setUser] = useState(userLogin);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,7 +31,7 @@ const EditInformation = () => {
           <Col md={8}>
             <Card className="shadow-sm border-0">
               <Card.Body>
-                <Button as={Link} to={"/information"} variant="outline-info">
+                <Button as={Link} to={`/${userLogin.role === 1 ? "admin/" : ""}information`} variant="outline-info">
                   Trở về
                 </Button>
                 <h3 className="mb-4 text-center">Edit Information</h3>

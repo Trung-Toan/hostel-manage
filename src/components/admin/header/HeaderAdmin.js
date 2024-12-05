@@ -68,7 +68,7 @@ const AdminHeader = () => {
                 Xin chào, {admin?.fullName || "Admin"}!
               </Dropdown.Header>
               <Dropdown.Divider />
-              <Dropdown.Item as={Link} to="/admin/profile">
+              <Dropdown.Item as={Link} to="/admin/information">
                 <ClipboardData className="me-2" />
                 Thông tin cá nhân
               </Dropdown.Item>

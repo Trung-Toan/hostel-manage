@@ -3,8 +3,8 @@ import { Container, Row, Col, Card, Image, Button } from "react-bootstrap";
 import BackToHome from '../BackToHome';
 import { Link } from 'react-router-dom';
 
-const Information = () => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
+const Information = ({userLogin}) => {
+    const user = userLogin;
     
       const renderRole = (role) => {
         return role === 0 ? "User" : "Admin";
