@@ -1,4 +1,5 @@
 // components/DataFetch.js
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 /**
@@ -134,12 +135,9 @@ function useGetUserByID(id) {
 }
 
 function useUpdateUser() {
-  const [isUpdate, setIsUpdate] = useState(false);
   const [updateError, setUpdateError] = useState(null);
-  const [userUD, setUserUD] = useState(null); // Đổi tên biến từ user -> userUD
 
   const updateUser = async (id, userUpdate) => {
-    setIsUpdate(false); // Reset trạng thái trước khi cập nhật mới
     try {
       const response = await fetch(`http://localhost:9999/user/${id}`, {
         method: "PUT",
@@ -150,14 +148,13 @@ function useUpdateUser() {
         throw new Error(`Failed to update user with ID: ${id}`);
       }
       const data = await response.json();
-      setUserUD(data); // Gán dữ liệu vào userUD
-      setIsUpdate(true);
+      return (data);
     } catch (error) {
       setUpdateError(new Error(`Failed to update user: ${error.message}`));
     }
   };
 
-  return { isUpdate, updateError, userUD, updateUser }; // Trả về userUD thay vì user
+  return { updateError, updateUser };
 }
 
 function useFetchData() {
@@ -175,7 +172,15 @@ function useFetchData() {
   return { getData };
 }
 
+const useGetData = () => {
+  const getData = (url) => {
+    return axios.get(url);
+  }
+  return {getData};
+}
+
 export {
+  useGetData,
   useFetchData,
   useUpdateUser,
   useGetUserByID,

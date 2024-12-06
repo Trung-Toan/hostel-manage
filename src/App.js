@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import { useEffect, useState } from "react";
 import RouteUser from "./routes/RouteUser";
-import HomePageAdmin from "./components/admin/HomePageAdmin";
 import Error from "./components/error/Error";
 import RouteAdmin from "./routes/RouteAdmin";
 

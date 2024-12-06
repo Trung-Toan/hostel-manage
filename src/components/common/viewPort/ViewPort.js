@@ -1,29 +1,16 @@
-import React, { memo, useRef, useState } from "react";
-import {
-  Card,
-  Row,
-  Col,
-  Image,
-  Button,
-  Form,
-  Container,
-  Spinner,
-} from "react-bootstrap";
-import {
-  HandThumbsUpFill,
-  HandThumbsUp,
-  Chat,
-  Share,
-} from "react-bootstrap-icons";
+import React, { memo } from "react";
+import { Card, Row, Col, Image, Container, Spinner, Button, Badge } from "react-bootstrap";
 
-const ViewPort = ({ posts, loadingPost }) => {
-  const [newComment, setNewComment] = useState("");
-
-  // Tạo ref để tham chiếu đến phần cuối cùng của bình luận
-  const lastCommentRef = useRef(null);
-
+const ViewPort = ({ posts, userLogin, loadingPost, onEdit, onDelete, onViewDetails, onAddPost }) => {
   return (
     <Container>
+      {/* Nút Thêm mới bài viết */}
+      <div className= {`text-center my-4 ${userLogin?.role !== 2 ? "d-none" : "" }`}>
+        <Button variant="success" onClick={onAddPost}>
+          Thêm mới bài viết
+        </Button>
+      </div>
+
       {loadingPost ? (
         // Hiệu ứng loading khi chờ tải dữ liệu
         <div className="text-center">
@@ -43,14 +30,19 @@ const ViewPort = ({ posts, loadingPost }) => {
                 boxShadow: "0 0 10px 4px rgba(0, 0, 0, 0.1)",
               }}
             >
-              <Card.Body className="p-2">
+              <Card.Body className={`p-3 `}>
                 {/* Header */}
-                <Row className="align-items-center mb-2">
+                <Row className="align-items-center mb-3">
                   <Col>
-                    <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+                    <div style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
                       {p.title}
                     </div>
                     <small className="text-muted">{p.createdAt}</small>
+                  </Col>
+                  <Col xs="auto" className={`${userLogin?.role !== 2 ? "d-none" : "" }`}>
+                    <Badge bg={p.status === 1 ? "success" : "secondary"}>
+                      {p.status === 1 ? "Hoạt động" : "Không hoạt động"}
+                    </Badge>
                   </Col>
                 </Row>
 
@@ -60,23 +52,47 @@ const ViewPort = ({ posts, loadingPost }) => {
                 </Card.Text>
 
                 {/* Images */}
-                <div className="d-flex flex-wrap justify-content-between">
-                  <Image
-                    src={p.images}
-                    alt="Image 1"
-                    className="mb-2"
-                    style={{
-                      width: "100%",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                    }}
-                  />
+                {p.images && (
+                  <div className="d-flex flex-wrap justify-content-center mb-3">
+                    <Image
+                      src={p.images}
+                      alt={p.title}
+                      className="mb-2"
+                      style={{
+                        width: "100%",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </div>
+                )}
+                {/* Action Buttons */}
+                <div className= {`d-flex ${userLogin?.role !== 2 ? "d-none" : "" } justify-content-between`}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => onViewDetails(p.id)}
+                  >
+                    Xem chi tiết
+                  </Button>
+                  <Button
+                    variant="warning"
+                    size="sm"
+                    onClick={() => onEdit(p.id)}
+                  >
+                    Chỉnh sửa
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => onDelete(p.id)}
+                  >
+                    Xóa
+                  </Button>
                 </div>
               </Card.Body>
             </Card>
-          ) : (
-            ""
-          )
+          ) : null
         )
       )}
     </Container>

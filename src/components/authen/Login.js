@@ -22,10 +22,10 @@ const Login = ({ user, handelIsLogin }) => {
       password: user.password || "",
     },
     validationSchema: Yup.object({
-      username: Yup.string()
+      username: Yup.string().trim()
         .required("Tên đăng nhập không được để trống")
         .min(3, "Tên đăng nhập phải ít nhất 3 ký tự"),
-      password: Yup.string()
+      password: Yup.string().trim()
         .required("Mật khẩu không được để trống")
         .min(6, "Mật khẩu phải ít nhất 6 ký tự"),
     }),
@@ -43,8 +43,7 @@ const Login = ({ user, handelIsLogin }) => {
           sessionStorage.setItem("user", JSON.stringify(findUser));
           setErrorMessage("");
           handelIsLogin(true);
-          if (findUser.role === 0) navigate("/");
-          else if(findUser.role === 1) navigate("/admin");
+          navigate("/");
         }
       } catch (error) {
         setErrorMessage("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
@@ -75,7 +74,7 @@ const Login = ({ user, handelIsLogin }) => {
             placeholder="Nhập tên đăng nhập"
             value={formik.values.username}
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur} // Đánh dấu "touched"
+            onBlur={formik.handleBlur}
             isInvalid={!!formik.errors.username && formik.touched.username}
           />
           <Form.Control.Feedback type="invalid">
@@ -93,7 +92,7 @@ const Login = ({ user, handelIsLogin }) => {
               placeholder="Nhập mật khẩu"
               value={formik.values.password}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur} // Đánh dấu "touched"
+              onBlur={formik.handleBlur}
               isInvalid={!!formik.errors.password && formik.touched.password}
             />
             <Button

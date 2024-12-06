@@ -2,7 +2,7 @@
   "user": [
     {
       "id": "1",
-      "fullName": "Customer User",
+      "fullName": "Toan tt",
       "roomID": "1",
       "statusRoom": "1",
       "username": "customer",
@@ -20,7 +20,7 @@
     },
     {
       "id": "2",
-      "fullName": "Owner User",
+      "fullName": "toan",
       "roomID": "",
       "statusRoom": "0",
       "username": "owner",
@@ -28,7 +28,7 @@
       "phoneNumber": "0987654321",
       "persionalAuth": "0123456789127",
       "password": "owner123",
-      "dob": "1980-01-01",
+      "dob": "2003-01-01",
       "address": "Ba Đình, Hà Nội",
       "avatar": "image_owner",
       "status": 1,
@@ -40,16 +40,16 @@
   "hostel": [
     {
       "id": "1",
-      "name": "Nhà trọ Thanh Xuân",
-      "description": "Tòa nhà 4 tầng với 15 phòng, gần trường Đại học Hà Nội.",
+      "name": "Nhà trọ Thanh Xuân 1212",
       "address": "Số 10, Thanh Xuân, Hà Nội",
-      "ownerId": "2",
+      "description": "Tòa nhà 4 tầng với 15 phòng, gần trường Đại học Hà Nội.",
       "status": 1,
+      "ownerId": "2",
       "images": [
-        "hostel1_img1",
-        "hostel1_img2"
+        "hostel2_img1",
+        "hostel2_img2"
       ],
-      "regionId": "1",
+      "regionId": "2",
       "createdAt": "2024-11-20 08:00:00",
       "updatedAt": "2024-11-20 08:30:00"
     },
