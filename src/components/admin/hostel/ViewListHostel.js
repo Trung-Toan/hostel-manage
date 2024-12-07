@@ -9,17 +9,18 @@ import {
   Button,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import './non-arrow.css';
+import "./non-arrow.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Notification from "../../common/information/Notification";
 
 const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
   const [updateMessage, setUpdateMessage] = useState(null);
-  
+
   const queryClient = useQueryClient();
-  const {mutate} = useMutation({
-    mutationFn: (payload) => axios.put(`http://localhost:9999/hostel/${payload.id}`, payload),
+  const { mutate } = useMutation({
+    mutationFn: (payload) =>
+      axios.put(`http://localhost:9999/hostel/${payload.id}`, payload),
     onSuccess: () => {
       setUpdateMessage({
         type: "success",
@@ -32,7 +33,7 @@ const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
         type: "error",
         text: "Gặp lỗi từ máy chủ. Xin vui lòng thử lại sau!",
       });
-    }    
+    },
   });
 
   const changeStatus = (hostel) => {
@@ -41,8 +42,8 @@ const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
       status: hostel.status === 1 ? 0 : 1,
     };
     mutate(updatedHostel);
-  }
-
+  };
+  
   return (
     <div className="container mt-4">
       <Notification
@@ -83,7 +84,9 @@ const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => changeStatus(hostel)}
-                      className= {`${hostel.status === 1 ? "text-danger" : "text-success"}`}
+                      className={`${
+                        hostel.status === 1 ? "text-danger" : "text-success"
+                      }`}
                     >
                       {hostel.status === 1 ? "Dừng hoạt động" : "Hoạt động"}
                     </Dropdown.Item>
@@ -93,11 +96,10 @@ const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
                 {/* Hình ảnh */}
                 <Card.Img
                   variant="top"
-                  src={`path/to/image/${hostel?.images[0]}`}
+                  src={hostel?.images[0]}
                   alt={hostel.name}
                   style={{ height: "180px", objectFit: "cover" }}
                 />
-
                 {/* Nội dung */}
                 <Card.Body>
                   <Card.Title>{hostel.name}</Card.Title>

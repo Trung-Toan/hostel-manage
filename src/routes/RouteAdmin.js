@@ -8,6 +8,7 @@ import ChangePassword from '../components/common/password/ChangePassword';
 import { useQuery } from '@tanstack/react-query';
 import { useGetData } from '../fetchData/DataFetch';
 import EditHostel from '../components/admin/hostel/EditHostel';
+import ViewListRoom from '../components/admin/room/ViewListRoom';
 
 const RouteAdmin = ({isLogin, handelIsLogin, userLogin}) => {
 
@@ -27,6 +28,7 @@ const RouteAdmin = ({isLogin, handelIsLogin, userLogin}) => {
         <Route path="information/edit_information" element={<EditInformation userLogin = {userLogin}  />}/>
         <Route path="change_password" element={<ChangePassword />} />
         <Route path='edit_hostel/:hId' element = {<EditHostel/>} />
+        <Route path='room' element = {<ViewListRoom/>} />
       </Route>
     </Routes>
   );

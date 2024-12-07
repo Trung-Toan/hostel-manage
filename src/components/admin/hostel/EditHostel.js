@@ -14,7 +14,8 @@ import {
   Col,
 } from "react-bootstrap";
 import axios from "axios";
-import './EditHostel.css';
+import "./EditHostel.css";
+import useProcessFile from "../../../until/processFile";
 
 const EditHostel = () => {
   const { hId } = useParams();
@@ -83,10 +84,32 @@ const EditHostel = () => {
     },
   });
 
+  const {processFile, convertFilesToBase64} = useProcessFile();
+
+  const saveImagesToFormik = (base64Images) => {
+    formik.setFieldValue("images", [...formik.values.images, ...base64Images]);
+  };
+
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
-    const newImages = files.map((file) => URL.createObjectURL(file));
-    formik.setFieldValue("images", [...formik.values.images, ...newImages]);
+    const acceptedFormats = ["image/jpeg", "image/jpg"];
+
+    // Gọi hàm xử lý tệp
+    const validFiles = processFile(files, acceptedFormats);
+
+    if (validFiles.length === 0) return; // Nếu không có tệp hợp lệ, dừng lại
+
+    // Chuyển đổi file sang Base64
+    convertFilesToBase64(validFiles)
+      .then((base64Images) => {
+        console.log("Hình ảnh dưới dạng Base64:", base64Images);
+        // Lưu vào Formik
+        saveImagesToFormik(base64Images);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi xử lý file: ", error);
+        alert("Có lỗi xảy ra khi xử lý hình ảnh.");
+      });
   };
 
   const handleImageRemove = (index) => {
@@ -170,9 +193,10 @@ const EditHostel = () => {
             <Form.Group controlId="images" className="mt-3">
               <Form.Label>Hình ảnh</Form.Label>
               <div className="d-flex flex-wrap gap-3">
+                {/* Hiển thị hình ảnh đã chọn */}
                 {formik.values.images.map((img, index) => (
                   <div key={index} className="position-relative">
-                    {/* Ảnh */}
+                    {/* Hình ảnh */}
                     <img
                       src={img}
                       alt={`Hostel ${index}`}
@@ -188,17 +212,18 @@ const EditHostel = () => {
                       className="delete-button"
                       onClick={() => handleImageRemove(index)}
                     >
-                      <span>×</span>
+                      x
                     </div>
                   </div>
                 ))}
               </div>
+              {/* Input file */}
               <Form.Control
                 type="file"
                 multiple
                 accept="image/*"
                 className="mt-2"
-                onChange={handleImageUpload}
+                onChange={(event) => handleImageUpload(event)}
               />
             </Form.Group>
 
