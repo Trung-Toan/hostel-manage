@@ -1,0 +1,11 @@
+/* Style chung cho form label */
+form label:not(.form-check-label) {
+    font-weight: bold; /* Chữ đậm cho nhãn */
+    position: relative; /* Định vị tương đối để sử dụng pseudo-element */
+}
+
+form label:not(.form-check-label)::after {
+    content: "*"; /* Thêm dấu sao sau nhãn */
+    color: red; /* Màu đỏ cho dấu sao */
+    margin-left: 4px; /* Khoảng cách giữa chữ và dấu sao */
+}

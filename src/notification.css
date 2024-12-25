@@ -1,0 +1,20 @@
+.custom-toast {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+  }
+  .custom-toast .btn-close {
+    opacity: 0.8;
+  }
+  .custom-toast .btn-close:hover {
+    opacity: 1;
+  }
+  .custom-toast-container {
+    position: fixed; /* Đảm bảo Toast không bị ảnh hưởng bởi layout */
+    top: 0px; /* Đặt vị trí ở đỉnh */
+    right: 0px; /* Đặt vị trí sát mép phải */
+    z-index: 1050; /* Tăng độ ưu tiên nếu cần */
+    padding: 1rem; /* Khoảng cách nội bộ */
+  }
+  
+  

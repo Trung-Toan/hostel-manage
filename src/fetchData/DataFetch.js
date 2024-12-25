@@ -1,4 +1,5 @@
 // components/DataFetch.js
+import { useQueries, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -93,17 +94,13 @@ function useGetRoomById(idRoom) {
  * @returns {Object} {posts: Array, loadingPost: Boolean}
  */
 function useGetAllPosts() {
-  const [posts, setPosts] = useState([]);
-  const [loadingPost, setLoadPost] = useState(true);
-
-  useEffect(() => {
-    fetch("http://localhost:9999/post")
-      .then((res) => res.json())
-      .then((data) => setPosts(data))
-      .catch((err) => console.log(err))
-      .finally(() => setLoadPost(false));
-  }, []);
-
+  const { data, isLoading: loadingPost } = useQuery({
+    queryKey: ["post"],
+    queryFn: () => axios.get("http://localhost:9999/post"),
+    staleTime: 10000,
+    cacheTime: 1000 * 60,
+  });
+  const posts = data?.data;
   return { posts, loadingPost };
 }
 
@@ -148,7 +145,7 @@ function useUpdateUser() {
         throw new Error(`Failed to update user with ID: ${id}`);
       }
       const data = await response.json();
-      return (data);
+      return data;
     } catch (error) {
       setUpdateError(new Error(`Failed to update user: ${error.message}`));
     }
@@ -166,7 +163,7 @@ function useFetchData() {
       return data;
     } catch (error) {
       console.error(`Error loading URL "${url}":`, error);
-      return null; 
+      return null;
     }
   };
   return { getData };
@@ -175,9 +172,9 @@ function useFetchData() {
 const useGetData = () => {
   const getData = (url) => {
     return axios.get(url);
-  }
-  return {getData};
-}
+  };
+  return { getData };
+};
 
 export {
   useGetData,

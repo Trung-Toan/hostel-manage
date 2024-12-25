@@ -94,6 +94,7 @@ const ForgetPassword = ({ email }) => {
       try {
         if (user && uid === user.id) {
           await updateUser(uid, { ...user, password: values.password });
+          navigate("/");
         } else {
           setMessageError("Không thể thay đổi mật khẩu");
         }

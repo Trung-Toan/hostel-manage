@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Spinner,
   Card,
@@ -7,17 +7,25 @@ import {
   Badge,
   Dropdown,
   Button,
+  Form,
+  InputGroup,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./non-arrow.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import Notification from "../../common/information/Notification";
+import Notification from "../../../Notification";
+import getCurrentDateTime from "../../../until/getCurrentDate";
 
-const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
+const ViewListHostel = ({ data, isLoading }) => {
   const [updateMessage, setUpdateMessage] = useState(null);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+  const [sortOrder, setSortOrder] = useState("");
   const queryClient = useQueryClient();
+  useEffect(() => {
+    setFilteredData(data?.data);
+  }, [data?.data]);
   const { mutate } = useMutation({
     mutationFn: (payload) =>
       axios.put(`http://localhost:9999/hostel/${payload.id}`, payload),
@@ -36,21 +44,81 @@ const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
     },
   });
 
+  const handleSearch = () => {
+    const filtered = data?.data?.filter((hostel) =>
+      hostel.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
+  const handleSort = (order) => {
+    setSortOrder(order);
+    if (order === "") {
+      // Trả về danh sách mặc định
+      setFilteredData(data?.data);
+      return;
+    }
+    const sortedData = [...filteredData].sort((a, b) => {
+      if (order === "asc") return a.name.localeCompare(b.name);
+      if (order === "desc") return b.name.localeCompare(a.name);
+      return 0;
+    });
+    setFilteredData(sortedData);
+  };
+
   const changeStatus = (hostel) => {
     const updatedHostel = {
       ...hostel,
       status: hostel.status === 1 ? 0 : 1,
+      updatedAt: getCurrentDateTime(),
     };
     mutate(updatedHostel);
   };
-  
+
   return (
     <div className="container mt-4">
       <Notification
         updateMessage={updateMessage}
         setUpdateMessage={setUpdateMessage}
       />
+      <div className="d-flex justify-content-center mb-5 mt-5">
+        <Link to={"/admin/create_hostel"} className="btn btn-success">
+          Tạo phòng trọ mới
+        </Link>
+      </div>
       <h2 className="text-center mb-4">Quản lý danh sách nhà trọ</h2>
+
+      {/* Tìm kiếm và Sắp xếp */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        {/* Thanh tìm kiếm */}
+        <InputGroup className="w-50">
+          <Form.Control
+            type="text"
+            placeholder="Tìm kiếm theo tên..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button variant="primary" onClick={handleSearch}>
+            Tìm kiếm
+          </Button>
+        </InputGroup>
+
+        {/* Lựa chọn sắp xếp */}
+        <Form.Group controlId="sortOrder" className="d-flex align-items-center">
+          <Form.Label className="mb-0 me-2">Sắp xếp:</Form.Label>
+          <Form.Select
+            value={sortOrder}
+            onChange={(e) => handleSort(e.target.value)}
+            className="w-auto"
+          >
+            <option value="">Mặc định</option>
+            <option value="asc">Tên tăng dần</option>
+            <option value="desc">Tên giảm dần</option>
+          </Form.Select>
+        </Form.Group>
+      </div>
+
+      {/* Danh sách nhà trọ */}
       {isLoading ? (
         <div className="text-center">
           <Spinner animation="border" role="status">
@@ -58,11 +126,17 @@ const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
           </Spinner>
         </div>
       ) : (
-        <Row xs={1} sm={2} md={3} lg={4}>
-          {data?.data?.map((hostel) => (
+        <Row
+          xs={1}
+          sm={2}
+          md={3}
+          lg={4}
+          className="d-flex justify-content-center"
+        >
+          {filteredData?.map((hostel) => (
             <Col key={hostel.id} className="mb-4">
               <Card className="h-100 shadow-sm position-relative">
-                {/* Dropdown ... ở góc trên phải của ảnh */}
+                {/* Dropdown */}
                 <Dropdown className="position-absolute top-0 end-0 m-2">
                   <Dropdown.Toggle
                     as="span"
@@ -125,7 +199,8 @@ const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
                   <Button
                     variant="primary"
                     size="sm"
-                    onClick={() => onViewDetails(hostel.id)}
+                    as={Link}
+                    to={`/admin/room/${hostel.id}`}
                   >
                     Xem phòng trọ
                   </Button>
@@ -139,4 +214,4 @@ const ViewListHostel = ({ data, isLoading, onDelete, onViewDetails }) => {
   );
 };
 
-export default ViewListHostel;
+export default memo(ViewListHostel);

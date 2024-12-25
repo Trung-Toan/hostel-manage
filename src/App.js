@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import RouteUser from "./routes/RouteUser";
 import Error from "./components/error/Error";
 import RouteAdmin from "./routes/RouteAdmin";
+import RouteManager from "./routes/RouteManager";
 
 function App() {
   const navigate = useNavigate();
@@ -24,12 +25,12 @@ function App() {
   useEffect(() => {
     const currentUser = JSON.parse(sessionStorage.getItem("user"));
     setUserLogin(currentUser);
-  
+
     const isForgotPasswordPath = matchPath(
       "/forgot_password/:uid",
       location.pathname
     );
-  
+
     if (!currentUser) {
       handelIsLogin(false);
       if (
@@ -51,7 +52,7 @@ function App() {
         navigate(role === 0 ? "/" : role === 1 ? "/admin" : "/manager");
       }
     }
-  
+
     const interval = setInterval(() => {
       const updatedUser = JSON.parse(sessionStorage.getItem("user"));
       if (!updatedUser) {
@@ -77,12 +78,11 @@ function App() {
         }
       }
     }, 5000);
-  
+
     return () => {
       clearInterval(interval);
     };
   }, [navigate, location.pathname]);
-  
 
   return (
     <Routes>
@@ -110,7 +110,20 @@ function App() {
           )
         }
       />
-      <Route path="/manager/*" element />
+      <Route
+        path="/manager/*"
+        element={
+          userLogin != null && userLogin.role === 2 ? (
+            <RouteManager
+              isLogin={isLogin}
+              handelIsLogin={handelIsLogin}
+              userLogin={userLogin}
+            />
+          ) : (
+            <Error />
+          )
+        }
+      />
     </Routes>
   );
 }

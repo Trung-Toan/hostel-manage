@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetData } from "../../../fetchData/DataFetch";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,18 +12,22 @@ import {
   Container,
   Row,
   Col,
+  Card,
+  Image,
 } from "react-bootstrap";
 import axios from "axios";
 import "./EditHostel.css";
 import useProcessFile from "../../../until/processFile";
+import getCurrentDateTime from "../../../until/getCurrentDate";
+import { FaTrash } from "react-icons/fa";
 
-const EditHostel = () => {
+const EditHostel = ({ hostelList }) => {
   const { hId } = useParams();
   const navigate = useNavigate();
   const { getData } = useGetData();
   const [updateMessage, setUpdateMessage] = useState(null);
+  const [img, setImg] = useState("");
 
-  // Fetch Hostel Details
   const {
     data: hostelDetail,
     isLoading,
@@ -37,7 +41,6 @@ const EditHostel = () => {
     retry: false,
   });
 
-  // Update Hostel Mutation
   const queryClient = useQueryClient();
   const { mutate, isLoading: updatingHostel } = useMutation({
     mutationFn: (payload) =>
@@ -69,7 +72,29 @@ const EditHostel = () => {
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
-      name: Yup.string().trim().required("Tên nhà trọ không được bỏ trống."),
+      name: Yup.string()
+        .trim()
+        .required("Tên nhà trọ không được bỏ trống.")
+        .test(
+          "unique-name",
+          "Tên nhà trọ đã tồn tại, vui lòng chọn tên khác.",
+          function (value) {
+            const rootName = hostelDetail?.data?.name || "";
+            const currentName = this.parent.name || "";
+
+            if (!hostelList || hostelList.length === 0) return true;
+
+            for (let h of hostelList) {
+              if (
+                h.name.toLowerCase() === value.toLocaleLowerCase() &&
+                currentName !== rootName
+              ) {
+                return false;
+              }
+            }
+            return true;
+          }
+        ),
       address: Yup.string().trim().required("Địa chỉ không được bỏ trống."),
       description: Yup.string(),
       status: Yup.number().required("Trạng thái không được bỏ trống."),
@@ -79,12 +104,19 @@ const EditHostel = () => {
         ...hostelDetail?.data,
         ...values,
         status: Number(values.status),
+        updatedAt: getCurrentDateTime(),
       };
       mutate(payload);
     },
   });
 
-  const {processFile, convertFilesToBase64} = useProcessFile();
+  useEffect(() => {
+    if (formik.values.images.length > 0) {
+      setImg(formik.values.images[0]);
+    }
+  }, [formik.values.images]);
+
+  const { processFile, convertFilesToBase64 } = useProcessFile();
 
   const saveImagesToFormik = (base64Images) => {
     formik.setFieldValue("images", [...formik.values.images, ...base64Images]);
@@ -94,20 +126,15 @@ const EditHostel = () => {
     const files = Array.from(event.target.files);
     const acceptedFormats = ["image/jpeg", "image/jpg"];
 
-    // Gọi hàm xử lý tệp
     const validFiles = processFile(files, acceptedFormats);
 
-    if (validFiles.length === 0) return; // Nếu không có tệp hợp lệ, dừng lại
+    if (validFiles.length === 0) return;
 
-    // Chuyển đổi file sang Base64
     convertFilesToBase64(validFiles)
       .then((base64Images) => {
-        console.log("Hình ảnh dưới dạng Base64:", base64Images);
-        // Lưu vào Formik
         saveImagesToFormik(base64Images);
       })
       .catch((error) => {
-        console.error("Lỗi khi xử lý file: ", error);
         alert("Có lỗi xảy ra khi xử lý hình ảnh.");
       });
   };
@@ -131,114 +158,149 @@ const EditHostel = () => {
   }
 
   return (
-    <Container>
-      <Row className="mt-4">
-        <Col md={{ span: 6, offset: 3 }}>
-          <h2 className="text-center">Chỉnh sửa thông tin nhà trọ</h2>
+    <Container fluid>
+      <Row className="mt-4 justify-content-center">
+        <Col md={8}>
+          <h2 className="text-center text-primary">
+            Chỉnh sửa thông tin nhà trọ
+          </h2>
           {updateMessage && (
             <Alert
               variant={updateMessage.type === "success" ? "success" : "danger"}
-              className="mt-3"
+              className="mt-3 text-center"
             >
               {updateMessage.text}
             </Alert>
           )}
           <Form onSubmit={formik.handleSubmit} className="mt-4">
-            {/* Tên */}
-            <Form.Group controlId="name">
-              <Form.Label>Tên nhà trọ</Form.Label>
-              <Form.Control
-                type="text"
-                {...formik.getFieldProps("name")}
-                isInvalid={formik.touched.name && formik.errors.name}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
-              </Form.Control.Feedback>
-            </Form.Group>
+            <Card className="shadow-sm">
+              <Card.Body>
+                <Row>
+                  <Col md={6} className="mb-4">
+                    <Form.Group controlId="images">
+                      <Form.Label className="fw-bold">Hình ảnh</Form.Label>
+                      <Card>
+                        <Card.Body className="text-center">
+                          <Image
+                            src={img || "https://via.placeholder.com/300"}
+                            alt="Hostel"
+                            fluid
+                            rounded
+                            className="mb-3 border"
+                            style={{ height: "300px", objectFit: "contain" }}
+                          />
+                          <div
+                            className="d-flex flex-wrap gap-3 justify-content-center p-2"
+                            style={{ borderTop: "1px solid black" }}
+                          >
+                            {formik.values.images.map((i, index) => (
+                              <div
+                                key={index}
+                                className="position-relative thumbnail-container"
+                              >
+                                <Image
+                                  src={i}
+                                  alt={`Hostel ${index}`}
+                                  onClick={() => setImg(i)}
+                                  thumbnail
+                                  style={{
+                                    width: "100px",
+                                    height: "100px",
+                                    objectFit: "contain",
+                                    border:
+                                      i === img
+                                        ? "2px solid red"
+                                        : "1px solid #ddd",
+                                    cursor: "pointer",
+                                  }}
+                                />
+                                <div
+                                  className="delete-button"
+                                  onClick={() => handleImageRemove(index)}
+                                >
+                                  <FaTrash />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <Form.Control
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            className="mt-2"
+                            onChange={handleImageUpload}
+                          />
+                        </Card.Body>
+                      </Card>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="name" className="mb-3">
+                      <Form.Label className="fw-bold">Tên nhà trọ</Form.Label>
+                      <Form.Control
+                        type="text"
+                        {...formik.getFieldProps("name")}
+                        isInvalid={formik.touched.name && formik.errors.name}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.name}
+                      </Form.Control.Feedback>
+                    </Form.Group>
 
-            {/* Địa chỉ */}
-            <Form.Group controlId="address" className="mt-3">
-              <Form.Label>Địa chỉ</Form.Label>
-              <Form.Control
-                type="text"
-                {...formik.getFieldProps("address")}
-                isInvalid={formik.touched.address && formik.errors.address}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.address}
-              </Form.Control.Feedback>
-            </Form.Group>
+                    <Form.Group controlId="address" className="mb-3">
+                      <Form.Label className="fw-bold">Địa chỉ</Form.Label>
+                      <Form.Control
+                        type="text"
+                        {...formik.getFieldProps("address")}
+                        isInvalid={
+                          formik.touched.address && formik.errors.address
+                        }
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.address}
+                      </Form.Control.Feedback>
+                    </Form.Group>
 
-            {/* Mô tả */}
-            <Form.Group controlId="description" className="mt-3">
-              <Form.Label>Mô tả</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                {...formik.getFieldProps("description")}
-              />
-            </Form.Group>
+                    <Form.Group controlId="status" className="mb-3">
+                      <Form.Label className="fw-bold">Trạng thái</Form.Label>
+                      <Form.Select {...formik.getFieldProps("status")}>
+                        <option value={1}>Hoạt động</option>
+                        <option value={0}>Ngừng hoạt động</option>
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.status}
+                      </Form.Control.Feedback>
+                    </Form.Group>
 
-            {/* Trạng thái */}
-            <Form.Group controlId="status" className="mt-3">
-              <Form.Label>Trạng thái</Form.Label>
-              <Form.Select {...formik.getFieldProps("status")}>
-                <option value={1}>Hoạt động</option>
-                <option value={0}>Không hoạt động</option>
-              </Form.Select>
-            </Form.Group>
+                    <Form.Group controlId="description" className="mb-3">
+                      <Form.Label className="fw-bold">Mô tả</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        {...formik.getFieldProps("description")}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
 
-            {/* Hình ảnh */}
-            <Form.Group controlId="images" className="mt-3">
-              <Form.Label>Hình ảnh</Form.Label>
-              <div className="d-flex flex-wrap gap-3">
-                {/* Hiển thị hình ảnh đã chọn */}
-                {formik.values.images.map((img, index) => (
-                  <div key={index} className="position-relative">
-                    {/* Hình ảnh */}
-                    <img
-                      src={img}
-                      alt={`Hostel ${index}`}
-                      style={{
-                        width: "100px",
-                        height: "100px",
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                      }}
-                    />
-                    {/* Nút Xóa */}
-                    <div
-                      className="delete-button"
-                      onClick={() => handleImageRemove(index)}
-                    >
-                      x
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Input file */}
-              <Form.Control
-                type="file"
-                multiple
-                accept="image/*"
-                className="mt-2"
-                onChange={(event) => handleImageUpload(event)}
-              />
-            </Form.Group>
-
-            <div className="text-center mt-4">
-              <Button variant="primary" type="submit" disabled={updatingHostel}>
+            <div className="mt-4 text-center">
+              <Button
+                type="submit"
+                variant="primary"
+                className="me-3"
+                disabled={updatingHostel}
+              >
                 {updatingHostel ? (
-                  <Spinner animation="border" size="sm" />
-                ) : (
-                  "Lưu thay đổi"
-                )}
+                  <Spinner animation="border" size="sm" className="me-2" />
+                ) : null}
+                Cập nhật
               </Button>
               <Button
                 variant="secondary"
-                className="ms-3"
                 onClick={() => navigate(-1)}
+                disabled={updatingHostel}
               >
                 Hủy
               </Button>
@@ -250,4 +312,4 @@ const EditHostel = () => {
   );
 };
 
-export default EditHostel;
+export default memo(EditHostel);

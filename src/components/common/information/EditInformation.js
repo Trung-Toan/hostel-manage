@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useUpdateUser } from "../../../fetchData/DataFetch";
-import Notification from "./Notification";
+import Notification from "../../../Notification";
 
 const EditInformation = ({ userLogin }) => {
   const { updateUser } = useUpdateUser();

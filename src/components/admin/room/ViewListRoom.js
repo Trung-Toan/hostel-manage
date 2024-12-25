@@ -1,126 +1,181 @@
-import React from "react";
-import { Card, Container, Row, Col, Badge, ListGroup, Button } from "react-bootstrap";
+import React, { memo, useState } from "react";
+import {
+  Card,
+  Container,
+  Row,
+  Col,
+  Badge,
+  Button,
+  Spinner,
+  Dropdown,
+} from "react-bootstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useGetData } from "../../../fetchData/DataFetch";
+import Notification from "../../../Notification";
+import axios from "axios";
+import getCurrentDateTime from "../../../until/getCurrentDate";
 
-const ViewListRoom = () => {
-  const roomData = {
-    id: "1",
-    hostelId: "1",
-    name: "Phòng 101",
-    description: "Phòng đầy đủ tiện nghi, có ban công.",
-    price: 3500000,
-    area: 25,
-    status: 1,
-    categoryId: "1",
-    utilities: ["1", "2"],
-    images: ["room1_img1", "room1_img2"],
-    currentOccupants: 2,
-    createdAt: "2024-11-20 10:00:00",
-    updatedAt: "2024-11-20 12:00:00",
+const ViewListRoom = ({ statusMapping }) => {
+  const navigate = useNavigate();
+  const { rhId } = useParams();
+  const [updateMessage, setUpdateMessage] = useState(null);
+
+  const queryClient = useQueryClient();
+  const { getData } = useGetData();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["room", rhId],
+    queryFn: () => getData("http://localhost:9999/room"),
+    staleTime: 10000,
+    cacheTime: 1000 * 60,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: (payload) =>
+      axios.put(`http://localhost:9999/room/${payload.id}`, payload),
+    onSuccess: () => {
+      setUpdateMessage({
+        type: "success",
+        text: "Cập nhật trạng thái phòng thành công!",
+      });
+      queryClient.refetchQueries(["room", rhId]);
+    },
+    onError: () => {
+      setUpdateMessage({
+        type: "error",
+        text: "Lỗi khi cập nhật trạng thái phòng. Vui lòng thử lại!",
+      });
+    },
+  });
+
+  const changeStatus = (room, toId) => {
+    const updatedRoom = {
+      ...room,
+      status: toId,
+      updatedAt: getCurrentDateTime(),
+    };
+    mutate(updatedRoom);
   };
 
   const formatCurrency = (value) =>
-    new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
+    new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
 
-  const formatDate = (dateString) =>
-    new Date(dateString).toLocaleString("vi-VN", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const roomList = data?.data?.filter((room) => room.hostelId == rhId);
 
   return (
-    <Container className="mt-5">
-      <Row>
-        <Col md={{ span: 8, offset: 2 }}>
-          <Card>
-            <Card.Header className="text-center">
-              <h3>{roomData.name}</h3>
-              <Badge bg={roomData.status === 1 ? "success" : "secondary"}>
-                {roomData.status === 1 ? "Còn phòng" : "Hết phòng"}
-              </Badge>
-            </Card.Header>
-            <Card.Body>
-              <Row>
-                {/* Hình ảnh */}
-                <Col md={6} className="mb-3">
-                  <div className="d-flex flex-column gap-2">
-                    {roomData.images.map((img, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          width: "100%",
-                          height: "150px",
-                          backgroundColor: "#f1f1f1",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          borderRadius: "8px",
-                          border: "1px solid #ddd",
-                        }}
+    <>
+      {isLoading ? (
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      ) : (
+        <Container className="mt-5">
+          <Notification
+            updateMessage={updateMessage}
+            setUpdateMessage={setUpdateMessage}
+          />
+          <div className=" d-flex justify-content-between mb-4">
+            <Button
+              variant="outline-info"
+              onClick={() => navigate(-1)}
+              className=""
+            >
+              Trở về
+            </Button>
+            <Link
+              to={"/admin/create_room/" + rhId}
+              className="btn btn-success "
+            >
+              Tạo phòng trọ mới
+            </Link>
+          </div>
+          <h3 className="text-center mb-4">Danh sách phòng</h3>
+          <Row className="g-4 d-flex justify-content-center">
+            {roomList?.map((room) => (
+              <Col md={6} lg={3} key={room.id}>
+                <Card className="shadow-sm position-relative">
+                  <Dropdown className="position-absolute top-0 end-0 m-2">
+                    <Dropdown.Toggle
+                      as="span"
+                      id={`dropdown-room-${room.id}`}
+                      role="button"
+                      className="p-0 border-0"
+                      style={{
+                        cursor: "pointer",
+                        boxShadow: "none",
+                        fontSize: "1.5rem",
+                        lineHeight: "0.5",
+                      }}
+                    >
+                      ...
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        as={Link}
+                        to={`/admin/room_detail/${room.id}`}
                       >
-                        <span>Hình {index + 1}</span>
-                      </div>
-                    ))}
-                  </div>
-                </Col>
-
-                {/* Thông tin chi tiết */}
-                <Col md={6}>
-                  <ListGroup variant="flush">
-                    <ListGroup.Item>
-                      <strong>Giá thuê:</strong> {formatCurrency(roomData.price)}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      <strong>Diện tích:</strong> {roomData.area} m²
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      <strong>Số người hiện tại:</strong> {roomData.currentOccupants}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      <strong>Mô tả:</strong> {roomData.description}
-                    </ListGroup.Item>
-                  </ListGroup>
-                </Col>
-              </Row>
-
-              {/* Tiện ích */}
-              <div className="mt-4">
-                <h5>Tiện ích</h5>
-                <div className="d-flex flex-wrap gap-2">
-                  {roomData.utilities.map((utility, index) => (
-                    <Badge key={index} bg="info">
-                      Tiện ích {utility}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Ngày tạo và cập nhật */}
-              <div className="mt-4">
-                <p>
-                  <strong>Ngày tạo:</strong> {formatDate(roomData.createdAt)}
-                </p>
-                <p>
-                  <strong>Ngày cập nhật:</strong> {formatDate(roomData.updatedAt)}
-                </p>
-              </div>
-            </Card.Body>
-
-            {/* Hành động */}
-            <Card.Footer className="text-center">
-              <Button variant="primary" className="me-2">
-                Chỉnh sửa
-              </Button>
-              <Button variant="danger">Xóa</Button>
-            </Card.Footer>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+                        Chỉnh sửa
+                      </Dropdown.Item>
+                      {Object.values(statusMapping)?.map((s) => {
+                        return (
+                          <Dropdown.Item
+                            onClick={() => changeStatus(room, s.id)}
+                            className={`text-${s.color}`}
+                          >
+                            {s.label}
+                          </Dropdown.Item>
+                        );
+                      })}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Card.Img
+                    variant="top"
+                    src={room?.images[0]}
+                    alt={room?.name}
+                    style={{ height: "180px", objectFit: "cover" }}
+                  />
+                  <Card.Body>
+                    <Card.Title>{room.name}</Card.Title>
+                    <Card.Text>
+                      <strong>Giá thuê:</strong> {formatCurrency(room.price)}{" "}
+                      <br />
+                      <strong>Diện tích:</strong> {room.area} m² <br />
+                      <strong>Trạng thái:</strong>{" "}
+                      <Badge
+                        bg={
+                          statusMapping[room.status]?.color ||
+                          statusMapping.default.color
+                        }
+                      >
+                        {statusMapping[room.status]?.label ||
+                          statusMapping.default.label}
+                      </Badge>
+                    </Card.Text>
+                    <div className="d-flex justify-content-center">
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        as={Link}
+                        to={`/admin/room_detail/${room.id}`}
+                      >
+                        Xem chi tiết
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Container>
+      )}
+    </>
   );
 };
 
-export default ViewListRoom;
+export default memo(ViewListRoom);

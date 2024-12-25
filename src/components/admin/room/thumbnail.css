@@ -1,0 +1,12 @@
+.thumbnail {
+    transition: transform 0.2s ease;
+  }
+  
+  .thumbnail:hover {
+    transform: scale(1.1);
+  }
+  
+  .selected-thumbnail {
+    border: 2px solid red !important;
+  }
+  

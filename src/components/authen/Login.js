@@ -22,10 +22,12 @@ const Login = ({ user, handelIsLogin }) => {
       password: user.password || "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().trim()
+      username: Yup.string()
+        .trim()
         .required("Tên đăng nhập không được để trống")
         .min(3, "Tên đăng nhập phải ít nhất 3 ký tự"),
-      password: Yup.string().trim()
+      password: Yup.string()
+        .trim()
         .required("Mật khẩu không được để trống")
         .min(6, "Mật khẩu phải ít nhất 6 ký tự"),
     }),
@@ -40,10 +42,14 @@ const Login = ({ user, handelIsLogin }) => {
             "Tên đăng nhập hoặc mật khẩu không đúng. Vui lòng thử lại."
           );
         } else {
-          sessionStorage.setItem("user", JSON.stringify(findUser));
-          setErrorMessage("");
-          handelIsLogin(true);
-          navigate("/");
+          if (findUser.status === 1) {
+            sessionStorage.setItem("user", JSON.stringify(findUser));
+            setErrorMessage("");
+            handelIsLogin(true);
+            navigate("/");
+          } else {
+            setErrorMessage("Tài khoản của bạn đã bị khoá!");
+          }
         }
       } catch (error) {
         setErrorMessage("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
