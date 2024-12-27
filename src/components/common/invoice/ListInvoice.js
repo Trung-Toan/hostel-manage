@@ -16,7 +16,9 @@ const ListInvoice = ({ user, invoices, loading }) => {
   const [room, setRoom] = useState({});
   const {getData} = useFetchData();
 
-  const tenantRoomId = user?.roomID; 
+  const tenantRoomId = user?.roomID;
+  const tenantHostelId = user?.hostelID;
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,9 +31,9 @@ const ListInvoice = ({ user, invoices, loading }) => {
     };
     fetchData();
   }, [tenantRoomId]);
-  
+
   const filteredInvoices = invoices
-    .filter((invoice) => invoice.roomId === tenantRoomId)
+    .filter((invoice) => invoice.roomId === tenantRoomId && invoice.hostelId === tenantHostelId )
     .sort((a, b) => new Date(a.month) - new Date(b.month)); // Sắp xếp theo tháng từ bé đến lớn
   // Nhóm hóa đơn theo tháng sau khi đã lọc và sắp xếp
   const groupedInvoices = filteredInvoices.reduce((acc, invoice) => {

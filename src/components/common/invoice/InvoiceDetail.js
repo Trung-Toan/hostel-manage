@@ -17,7 +17,7 @@ import {
   CheckCircle,
   ExclamationCircle,
 } from "react-bootstrap-icons";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useFetchData, useGetInvoiceById } from "../../../fetchData/DataFetch";
 import BackToHome from "../BackToHome";
 
@@ -25,12 +25,15 @@ const InvoiceDetail = () => {
   const { idInvoice } = useParams();
   const { invoice, loading } = useGetInvoiceById(idInvoice);
   const [room, setRoom] = useState({});
-  const {getData} = useFetchData();
+  const { getData } = useFetchData();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       if (invoice) {
-        const data = await getData(`http://localhost:9999/room/${invoice.roomId}`);
+        const data = await getData(
+          `http://localhost:9999/room/${invoice.roomId}`
+        );
         if (data) {
           setRoom(data);
         }
@@ -38,7 +41,6 @@ const InvoiceDetail = () => {
     };
     fetchData();
   }, [invoice]);
-
 
   // Check if invoice data is loaded
   if (Object.keys(invoice).length === 0 || !invoice) {
@@ -83,7 +85,7 @@ const InvoiceDetail = () => {
               Mã hóa đơn: <strong>{invoice.id || "N/A"}</strong>
             </div>
             <div>
-              {invoice.status === "paid" ? (
+              {invoice.status === "1" ? (
                 <Badge bg="success">
                   <CheckCircle className="me-2" />
                   Đã thanh toán
@@ -133,7 +135,9 @@ const InvoiceDetail = () => {
                 <tr>
                   <td>Tiền thuê phòng</td>
                   <td>{room.name || "-"}</td>
-                  <td className="text-end">{(room.price || "-").toLocaleString("vi-VN")}{" "} ₫ </td>
+                  <td className="text-end">
+                    {(room.price || "-").toLocaleString("vi-VN")} ₫{" "}
+                  </td>
                   <td className="text-end">
                     {(invoice.priceRoom || 0).toLocaleString("vi-VN")} ₫
                   </td>
@@ -203,9 +207,12 @@ const InvoiceDetail = () => {
               </tfoot>
             </Table>
             <div className="text-end">
-              <Link to={"/list_invoice"} className="btn btn-outline-info">
+              <button
+                onClick={() => navigate(-1)}
+                className="btn btn-outline-info"
+              >
                 Trở về trang trước
-              </Link>
+              </button>
             </div>
           </Card.Body>
         </Card>

@@ -254,42 +254,47 @@ const ViewListAccount = ({ userLogin }) => {
         Danh sách tài khoản{" "}
         {userLogin.role === 1 ? "User (Quản lý)" : "Customer"}
       </h2>
-      <Row>
-        <Col>
-          <InputGroup className="mb-3">
-            <Form.Select
-              value={selectedHostel}
-              onChange={handleFilterByHostel}
-              aria-label="Lọc theo nhà trọ"
-            >
-              <option value="">Tất cả nhà trọ</option>
-              {hostel?.data?.map((h) => (
-                <option key={h.id} value={h.id}>
-                  {h.name}
-                </option>
-              ))}
-            </Form.Select>
-          </InputGroup>
+      <Row className="mb-4 justify-content-between">
+        <Col md={4}>
+          <Form.Group controlId="search">
+            <Form.Label className="fw-bold">Tìm kiếm</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilteredAccounts(accounts);
+                }}
+              >
+                Xóa tìm kiếm
+              </Button>
+            </InputGroup>
+          </Form.Group>
         </Col>
-        <Col>
-          {/* Tìm kiếm */}
-          <InputGroup className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Tìm kiếm theo họ và tên, ID, email, số điện thoại, hoặc nhà trọ "
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-            <Button
-              variant="outline-secondary"
-              onClick={() => {
-                setSearchTerm("");
-                setFilteredAccounts(accounts);
-              }}
-            >
-              Xóa tìm kiếm
-            </Button>
-          </InputGroup>
+        <Col md={3}>
+          <Form.Group controlId="fiterHostel">
+            <Form.Label className="fw-bold">Lọc theo nhà trọ</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Select
+                value={selectedHostel}
+                onChange={handleFilterByHostel}
+                aria-label="Lọc theo nhà trọ"
+              >
+                <option value="">Tất cả nhà trọ</option>
+                {hostel?.data?.map((h) => (
+                  <option key={h.id} value={h.id}>
+                    {h.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </InputGroup>
+          </Form.Group>
         </Col>
       </Row>
       {/* Danh sách tài khoản */}

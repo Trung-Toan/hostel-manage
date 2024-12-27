@@ -104,6 +104,16 @@ function useGetAllPosts() {
   return { posts, loadingPost };
 }
 
+function useGetDataByUrl(url, key) {
+  const { data, isLoading } = useQuery({
+    queryKey: [key],
+    queryFn: () => axios.get(url),
+    staleTime: 10000,
+    cacheTime: 1000 * 60,
+  });
+  return { data, isLoading };
+}
+
 function useGetAllUser() {
   const [users, setUsers] = useState([]);
   const [loadingUser, setLoadingUser] = useState(true);
@@ -177,6 +187,7 @@ const useGetData = () => {
 };
 
 export {
+  useGetDataByUrl,
   useGetData,
   useFetchData,
   useUpdateUser,

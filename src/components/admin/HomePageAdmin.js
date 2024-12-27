@@ -23,8 +23,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import AddIcon from "@mui/icons-material/Add";
-import ViewListIcon from "@mui/icons-material/ViewList";  // Changed to ViewListIcon for clarity
+import ViewListIcon from "@mui/icons-material/ViewList"; // Changed to ViewListIcon for clarity
 import AdminHeader from "./header/HeaderAdmin";
+import { CardList, ClipboardPlus, FileEarmarkText, FilePlus, ListCheck, PersonLinesFill, PersonPlus, PlusSquare, Receipt, Tags, Tools } from "react-bootstrap-icons";
 
 const drawerWidth = 240;
 
@@ -92,11 +93,14 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const HomePageAdmin = ({isLogin, userLogin}) => {
+const HomePageAdmin = ({ isLogin, userLogin }) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [hostelOpen, setHostelOpen] = React.useState(false);
   const [accountOpen, setAccountOpen] = React.useState(false);
+  const [untilityOpen, setUntilityOpen] = React.useState(false);
+  const [invoiceOpen, setInvoiceOpen] = React.useState(false);
+  const [categoryOpen, setCategoryOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -114,7 +118,8 @@ const HomePageAdmin = ({isLogin, userLogin}) => {
     setAccountOpen((prev) => !prev);
   };
 
-  const urlPath = userLogin?.role === 1 ? "admin" : userLogin?.role === 2 ? "manager" : "";
+  const urlPath =
+    userLogin?.role === 1 ? "admin" : userLogin?.role === 2 ? "manager" : "";
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -133,14 +138,18 @@ const HomePageAdmin = ({isLogin, userLogin}) => {
             <MenuIcon />
           </IconButton>
           <Typography style={{ width: "100%" }}>
-            <AdminHeader isLogin = {isLogin} />
+            <AdminHeader isLogin={isLogin} />
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -151,23 +160,47 @@ const HomePageAdmin = ({isLogin, userLogin}) => {
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
-              <ListItemText primary={`${userLogin?.role === 1 ? "Quản lý nhà trọ": "Quản lý bài đăng"}`} />
+              <ListItemText
+                primary={`${
+                  userLogin?.role === 1 ? "Quản lý nhà trọ" : "Quản lý bài đăng"
+                }`}
+              />
               {hostelOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItemButton>
           </ListItem>
           <Collapse in={hostelOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }} component={NavLink} to={`/${urlPath}/`}>
+              <ListItemButton
+                sx={{ pl: 4 }}
+                component={NavLink}
+                to={`/${urlPath}/`}
+              >
                 <ListItemIcon>
                   <ViewListIcon /> {/* Changed to ViewListIcon */}
                 </ListItemIcon>
-                <ListItemText primary= {`${userLogin?.role === 1 ? "Danh sách nhà trọ" : "Danh sách bài đăng"}`} />
+                <ListItemText
+                  primary={`${
+                    userLogin?.role === 1
+                      ? "Danh sách nhà trọ"
+                      : "Danh sách bài đăng"
+                  }`}
+                />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} component={NavLink} to={`/${urlPath}/${userLogin?.role === 1 ? "create_hostel" : "add_new_post"}`}>
+              <ListItemButton
+                sx={{ pl: 4 }}
+                component={NavLink}
+                to={`/${urlPath}/${
+                  userLogin?.role === 1 ? "create_hostel" : "add_new_post"
+                }`}
+              >
                 <ListItemIcon>
                   <AddIcon />
                 </ListItemIcon>
-                <ListItemText primary={`${userLogin?.role === 1 ? "Thêm nhà trọ" : "Thêm bài đăng"}`} />
+                <ListItemText
+                  primary={`${
+                    userLogin?.role === 1 ? "Thêm nhà trọ" : "Thêm bài đăng"
+                  }`}
+                />
               </ListItemButton>
             </List>
           </Collapse>
@@ -184,20 +217,148 @@ const HomePageAdmin = ({isLogin, userLogin}) => {
           </ListItem>
           <Collapse in={accountOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }} component={NavLink} to={`/${urlPath}/view_account`}>
+              <ListItemButton
+                sx={{ pl: 4 }}
+                component={NavLink}
+                to={`/${urlPath}/view_account`}
+              >
                 <ListItemIcon>
-                  <ViewListIcon /> {/* Changed to ViewListIcon */}
+                  <PersonLinesFill />
                 </ListItemIcon>
                 <ListItemText primary="Danh sách tài khoản" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} component={NavLink} to={`/${urlPath}/create_account`}>
+              <ListItemButton
+                sx={{ pl: 4 }}
+                component={NavLink}
+                to={`/${urlPath}/create_account`}
+              >
                 <ListItemIcon>
-                  <AddIcon />
+                  <PersonPlus />
                 </ListItemIcon>
                 <ListItemText primary="Tạo tài khoản" />
               </ListItemButton>
             </List>
           </Collapse>
+          {/* Quản lý tiện ích (utilities) */}
+          {userLogin?.role === 2 && (
+            <>
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => setUntilityOpen((prev) => !prev)}
+                >
+                  <ListItemIcon>
+                    <Tools />
+                  </ListItemIcon>
+                  <ListItemText primary="Quản lý tiện ích" />
+                  {untilityOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ListItemButton>
+              </ListItem>
+              <Collapse in={untilityOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    component={NavLink}
+                    to="/manager/view_utilities"
+                  >
+                    <ListItemIcon>
+                      <CardList />
+                    </ListItemIcon>
+                    <ListItemText primary="Danh sách tiện ích" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    component={NavLink}
+                    to="/manager/create_utilities"
+                  >
+                    <ListItemIcon>
+                      <ClipboardPlus />
+                    </ListItemIcon>
+                    <ListItemText primary="Thêm tiện ích" />
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </>
+          )}
+
+          {/* Quản lý hóa đơn (invoice) */}
+          {userLogin?.role === 2 && (
+            <>
+              <ListItem disablePadding>
+                <ListItemButton onClick={() => setInvoiceOpen((prev) => !prev)}>
+                  <ListItemIcon>
+                    <Receipt />
+                  </ListItemIcon>
+                  <ListItemText primary="Quản lý hóa đơn" />
+                  {invoiceOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ListItemButton>
+              </ListItem>
+              <Collapse in={invoiceOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    component={NavLink}
+                    to="/manager/view_invoice"
+                  >
+                    <ListItemIcon>
+                      <FileEarmarkText />
+                    </ListItemIcon>
+                    <ListItemText primary="Danh sách hóa đơn" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    component={NavLink}
+                    to="/manager/create_invoice"
+                  >
+                    <ListItemIcon>
+                      <FilePlus />
+                    </ListItemIcon>
+                    <ListItemText primary="Thêm hóa đơn" />
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </>
+          )}
+
+          {/* Quản lý danh mục (category) */}
+          {userLogin?.role === 2 && (
+            <>
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => setCategoryOpen((prev) => !prev)}
+                >
+                  <ListItemIcon>
+                  <Tags />
+                  </ListItemIcon>
+                  <ListItemText primary="Quản lý danh mục" />
+                  {categoryOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ListItemButton>
+              </ListItem>
+              <Collapse in={categoryOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    component={NavLink}
+                    to="/manager/view_category"
+                  >
+                    <ListItemIcon>
+                      <ListCheck />
+                    </ListItemIcon>
+                    <ListItemText primary="Danh sách danh mục" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    component={NavLink}
+                    to="/manager/create_category"
+                  >
+                    <ListItemIcon>
+                      <PlusSquare />
+                    </ListItemIcon>
+                    <ListItemText primary="Thêm danh mục" />
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </>
+          )}
         </List>
         <Divider />
       </Drawer>
