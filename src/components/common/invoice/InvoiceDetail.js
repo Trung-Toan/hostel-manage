@@ -17,7 +17,7 @@ import {
   CheckCircle,
   ExclamationCircle,
 } from "react-bootstrap-icons";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useFetchData, useGetInvoiceById } from "../../../fetchData/DataFetch";
 import BackToHome from "../BackToHome";
 
@@ -27,6 +27,9 @@ const InvoiceDetail = () => {
   const [room, setRoom] = useState({});
   const { getData } = useFetchData();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isManager = location.pathname.includes("manager");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +49,7 @@ const InvoiceDetail = () => {
   if (Object.keys(invoice).length === 0 || !invoice) {
     return (
       <Container className="py-4">
-        <BackToHome />
+       {isManager ? null : <BackToHome />}
         {loading ? (
           // Hiệu ứng loading khi chờ tải dữ liệu
           <div className="text-center">
@@ -68,7 +71,7 @@ const InvoiceDetail = () => {
 
   return (
     <Container className="py-4">
-      <BackToHome />
+      {isManager ? null : <BackToHome />}
       <h2 className="mb-4 text-center">Chi tiết hóa đơn</h2>
       {loading ? (
         // Hiệu ứng loading khi chờ tải dữ liệu
@@ -134,7 +137,7 @@ const InvoiceDetail = () => {
                 {/* tiền phòng */}
                 <tr>
                   <td>Tiền thuê phòng</td>
-                  <td>{room.name || "-"}</td>
+                  <td>1</td>
                   <td className="text-end">
                     {(room.price || "-").toLocaleString("vi-VN")} ₫{" "}
                   </td>
@@ -183,7 +186,7 @@ const InvoiceDetail = () => {
                 {/* tiền dịch vụ */}
                 <tr>
                   <td>Phí dịch vụ</td>
-                  <td>{room.currentOccupants} người</td>
+                  <td>{invoice?.currentOccupants} người</td>
                   <td className="text-end">
                     {(invoice.servicePricePerPerson || 0).toLocaleString(
                       "vi-VN"
@@ -209,10 +212,18 @@ const InvoiceDetail = () => {
             <div className="text-end">
               <button
                 onClick={() => navigate(-1)}
-                className="btn btn-outline-info"
+                className="btn btn-outline-info me-2"
               >
                 Trở về trang trước
               </button>
+              <Link
+                to={`/manager/edit_invoice/${idInvoice}`}
+                className={`${
+                  isManager ? "" : "d-none"
+                } btn btn-outline-warning`}
+              >
+                Chỉnh sửa hoá đơn
+              </Link>
             </div>
           </Card.Body>
         </Card>

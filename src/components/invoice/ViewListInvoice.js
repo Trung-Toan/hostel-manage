@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Notification from "../../../src/Notification";
 import ViewInvoiceByHostel from "./ViewInvoiceByHostel";
+import getCurrentDateTime from "../../until/getCurrentDate";
 
 const ViewListInvoice = ({ data, isLoading }) => {
   const [updateMessage, setUpdateMessage] = useState(null);
@@ -65,6 +66,7 @@ const ViewListInvoice = ({ data, isLoading }) => {
     const updatedInvoice = {
       ...invoice,
       status: invoice.status === "1" ? "0" : "1",
+      updatedAt: getCurrentDateTime(),
     };
     mutate(updatedInvoice);
   };

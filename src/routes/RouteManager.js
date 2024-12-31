@@ -16,6 +16,7 @@ import CreateNewInvoice from "../components/invoice/CreateNewInvoice";
 import CreateNewUltility from "../components/ultilities/CreateNewUltility";
 import CreateNewCategory from "../components/category/CreateNewCategory";
 import InvoiceDetail from "../components/common/invoice/InvoiceDetail";
+import EditInvoice from "../components/invoice/EditInvoice";
 
 const RouteManager = ({userLogin }) => {
   const { posts, loadingPost } = useGetAllPosts();
@@ -38,6 +39,7 @@ const RouteManager = ({userLogin }) => {
         <Route path='view_utilities/edit_ultility/:id' element={<CreateNewUltility/>} />
         <Route path='view_invoice' element = {<ViewListInvoice data={invoice} isLoading={loadingInvoice} />} />
         <Route path='create_invoice' element = {<CreateNewInvoice />} />
+        <Route path='edit_invoice/:id' element = {<EditInvoice/>} />
         <Route path="invoice/:idInvoice" element={<InvoiceDetail />}/>
         <Route path='view_category' element = {<ViewListCategory data={category} isLoading={loadingCategory} />} />
         <Route path='create_category' element = {<CreateNewCategory />} />

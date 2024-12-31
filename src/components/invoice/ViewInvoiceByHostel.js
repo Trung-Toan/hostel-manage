@@ -45,7 +45,7 @@ const ViewInvoiceByHostel = ({ invoices = [], changeStatus }) => {
                                   : "Chưa thanh toán"}
                               </Badge>
                             </td>
-                            <td>{invoice.totalAmount.toLocaleString()} VND</td>
+                            <td>{invoice?.totalAmount?.toLocaleString()} VND</td>
                             <td className="d-flex justify-content-center">
                               <Button
                                 variant={
