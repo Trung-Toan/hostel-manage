@@ -20,8 +20,8 @@ import EditInvoice from "../components/invoice/EditInvoice";
 
 const RouteManager = ({userLogin }) => {
   const { posts, loadingPost } = useGetAllPosts();
-  const {data: category, isLoading:loadingCategory} = useGetDataByUrl("http://localhost:9999/category", "category");
   const {data: invoice, isLoading:loadingInvoice} = useGetDataByUrl("http://localhost:9999/invoice", "invoice");
+  const {data: category, isLoading:loadingCategory} = useGetDataByUrl("http://localhost:9999/category", "category");
   const {data: utilities, isLoading:loadingUtilities} = useGetDataByUrl("http://localhost:9999/utilities", "utilities");
 
   return (
@@ -34,13 +34,13 @@ const RouteManager = ({userLogin }) => {
         <Route path="edit/:id" element={<EditPost/>} />
         <Route path='create_account' element = {<CreateAccount userLogin = {userLogin}/>} />
         <Route path='view_account' element = {<ViewListAccount userLogin = {userLogin} />} />
-        <Route path='view_utilities' element = {<ViewListUltility data={utilities} isloading={loadingUtilities} />} />
-        <Route path='create_utilities' element = {<CreateNewUltility />} />
-        <Route path='view_utilities/edit_ultility/:id' element={<CreateNewUltility/>} />
         <Route path='view_invoice' element = {<ViewListInvoice data={invoice} isLoading={loadingInvoice} />} />
         <Route path='create_invoice' element = {<CreateNewInvoice />} />
         <Route path='edit_invoice/:id' element = {<EditInvoice/>} />
         <Route path="invoice/:idInvoice" element={<InvoiceDetail />}/>
+        <Route path='view_utilities' element = {<ViewListUltility data={utilities} isloading={loadingUtilities} />} />
+        <Route path='create_utilities' element = {<CreateNewUltility />} />
+        <Route path='view_utilities/edit_ultility/:id' element={<CreateNewUltility/>} />
         <Route path='view_category' element = {<ViewListCategory data={category} isLoading={loadingCategory} />} />
         <Route path='create_category' element = {<CreateNewCategory />} />
         <Route path="view_category/edit_category/:id" element={<CreateNewCategory/>} />

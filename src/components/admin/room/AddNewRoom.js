@@ -10,7 +10,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";

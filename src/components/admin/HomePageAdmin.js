@@ -240,7 +240,7 @@ const HomePageAdmin = ({ isLogin, userLogin }) => {
             </List>
           </Collapse>
           {/* Quản lý tiện ích (utilities) */}
-          {userLogin?.role === 2 && (
+          {(userLogin?.role === 2 || userLogin?.role === 1) && (
             <>
               <ListItem disablePadding>
                 <ListItemButton
@@ -258,7 +258,7 @@ const HomePageAdmin = ({ isLogin, userLogin }) => {
                   <ListItemButton
                     sx={{ pl: 4 }}
                     component={NavLink}
-                    to="/manager/view_utilities"
+                    to={`/${urlPath}/view_utilities`}
                   >
                     <ListItemIcon>
                       <CardList />
@@ -268,7 +268,7 @@ const HomePageAdmin = ({ isLogin, userLogin }) => {
                   <ListItemButton
                     sx={{ pl: 4 }}
                     component={NavLink}
-                    to="/manager/create_utilities"
+                    to={`/${urlPath}/create_utilities`}
                   >
                     <ListItemIcon>
                       <ClipboardPlus />
@@ -320,7 +320,7 @@ const HomePageAdmin = ({ isLogin, userLogin }) => {
           )}
 
           {/* Quản lý danh mục (category) */}
-          {userLogin?.role === 2 && (
+          {(userLogin?.role === 2 || userLogin?.role === 1) && (
             <>
               <ListItem disablePadding>
                 <ListItemButton
@@ -338,7 +338,7 @@ const HomePageAdmin = ({ isLogin, userLogin }) => {
                   <ListItemButton
                     sx={{ pl: 4 }}
                     component={NavLink}
-                    to="/manager/view_category"
+                    to={`/${urlPath}/view_category`}
                   >
                     <ListItemIcon>
                       <ListCheck />
@@ -348,7 +348,7 @@ const HomePageAdmin = ({ isLogin, userLogin }) => {
                   <ListItemButton
                     sx={{ pl: 4 }}
                     component={NavLink}
-                    to="/manager/create_category"
+                    to={`/${urlPath}/create_category`}
                   >
                     <ListItemIcon>
                       <PlusSquare />

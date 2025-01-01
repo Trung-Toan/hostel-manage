@@ -18,11 +18,14 @@ const ViewRoomByHostel = ({
     error: errorRoom,
   } = useQuery({
     queryFn: () => axios.get(`http://localhost:9999/room?hostelId=` + hId),
-    queryKey: ["roomh", hId],
+    queryKey: [`room_h_${hId}`],
     staleTime: 10000,
     cacheTime: 1000 * 60,
     retry: 0,
   });
+
+  const fiterRoom = room?.data?.filter((r) => r.status === 1);
+
   useEffect(() => {
     if (!isLoadRoom) {
       handleChangeRoom(account, accountId, rId || room?.data[0]?.id);
@@ -38,7 +41,7 @@ const ViewRoomByHostel = ({
         aria-label="Default select example" 
         onChange={(e) => handleChangeRoom(account, accountId, e.target.value)}
     >
-      {room?.data?.map((r) => (
+      {fiterRoom?.map((r) => (
         <option selected={r.id === rId} key={r.id} value={r.id}>
           {r.name}
         </option>

@@ -46,8 +46,8 @@ const ViewListAccount = ({ userLogin }) => {
     isLoading: loadingHostel,
     error: errorHostel,
   } = useQuery({
-    queryFn: () => getData("http://localhost:9999/hostel"),
-    queryKey: ["hostel"],
+    queryFn: () => getData("http://localhost:9999/hostel/?status=1"),
+    queryKey: ["hostels1"],
     staleTime: 10000,
     cacheTime: 1000 * 60,
   });

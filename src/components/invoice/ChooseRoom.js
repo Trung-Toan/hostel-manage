@@ -6,7 +6,7 @@ import getMonth from "../../until/getMonth";
 const ChooseRoom = ({ hostelId, selectedRoom, setSelectedRoom }) => {
   const { data: room, isLoading: loadRoom } = useGetDataByUrl(
     `http://localhost:9999/room/?hostelId=${hostelId}`,
-    `roomsh_${hostelId}_s1`
+    `room_h_${hostelId}`
   );
 
   const fiterRoom = room?.data?.filter((r) => r.status === 1);
