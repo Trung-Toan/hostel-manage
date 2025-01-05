@@ -17,6 +17,7 @@ import CreateNewUltility from "../components/ultilities/CreateNewUltility";
 import CreateNewCategory from "../components/category/CreateNewCategory";
 import InvoiceDetail from "../components/common/invoice/InvoiceDetail";
 import EditInvoice from "../components/invoice/EditInvoice";
+import ChangePassword from "../components/common/password/ChangePassword";
 
 const RouteManager = ({userLogin }) => {
   const { posts, loadingPost } = useGetAllPosts();
@@ -30,6 +31,7 @@ const RouteManager = ({userLogin }) => {
         <Route index element={ <ViewPort posts={posts} loadingPost={loadingPost} userLogin={userLogin} /> } />
         <Route path="information" element={<Information userLogin={userLogin} />} />
         <Route path="information/edit_information" element={<EditInformation userLogin={userLogin} />} />
+        <Route path="change_password" element={<ChangePassword userLogin={userLogin}/>} />
         <Route path="add_new_post" element={<CreateNewPost/>} />
         <Route path="edit/:id" element={<EditPost/>} />
         <Route path='create_account' element = {<CreateAccount userLogin = {userLogin}/>} />

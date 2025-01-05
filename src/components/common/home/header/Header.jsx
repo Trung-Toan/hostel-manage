@@ -62,7 +62,7 @@ const Header = () => {
           <Nav className="ms-auto align-items-center">
             {user ? (
               <>
-                <Receipt/>
+                <Receipt />
                 <Nav.Link as={Link} to="list_invoice" className="me-3">
                   Hoá đơn
                 </Nav.Link>

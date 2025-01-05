@@ -49,7 +49,7 @@ const RouteUser = ({isLogin, handelIsLogin, userLogin}) => {
         />
         <Route path="information" element={<Information userLogin = {userLogin} />} />
         <Route path="information/edit_information" element={<EditInformation userLogin = {userLogin} />}/>
-        <Route path="change_password" element={<ChangePassword />} />
+        <Route path="change_password" element={<ChangePassword userLogin={userLogin}/>} />
         <Route
           path="list_invoice"
           element={

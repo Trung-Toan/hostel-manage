@@ -229,6 +229,22 @@ const EditInvoice = () => {
           </Row>
           <Row>
             <Col>
+              <Form.Group controlId="currentOccupants" className="mb-3">
+                <Form.Label>Số người ở hiện tại</Form.Label>
+                <Form.Control
+                  type="number"
+                  disabled={true}
+                  {...formik.getFieldProps("currentOccupants")}
+                  isInvalid={
+                    formik.touched.currentOccupants && formik.errors.currentOccupants
+                  }
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.currentOccupants}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            <Col>
               <Form.Group controlId="servicePricePerPerson" className="mb-3">
                 <Form.Label>Giá dịch vụ mỗi người</Form.Label>
                 <Form.Control
@@ -248,23 +264,6 @@ const EditInvoice = () => {
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.servicePricePerPerson}
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group controlId="currentOccupants" className="mb-3">
-                <Form.Label>Số người ở hiện tại</Form.Label>
-                <Form.Control
-                  type="number"
-                  {...formik.getFieldProps("currentOccupants")}
-                  isInvalid={
-                    formik.touched.currentOccupants && formik.errors.currentOccupants
-                  }
-                />
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.currentOccupants}
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>

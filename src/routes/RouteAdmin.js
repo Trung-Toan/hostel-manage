@@ -24,7 +24,7 @@ const RouteAdmin = ({userLogin}) => {
 
   const {getData} = useGetData();
   
-  const {data: hostel, isLoading: loadingHostel, error: errorHostel} = useQuery({
+  const {data: hostel, isLoading: loadingHostel} = useQuery({
     queryFn: () => getData("http://localhost:9999/hostel"),
     queryKey: ['hostel'],
     staleTime: 10000,
@@ -54,7 +54,7 @@ const RouteAdmin = ({userLogin}) => {
         <Route index element={<ViewListHostel data = {hostel} isLoading = {loadingHostel} />} />
         <Route path="information" element={<Information userLogin = {userLogin}/>} />
         <Route path="information/edit_information" element={<EditInformation userLogin = {userLogin} />}/>
-        <Route path="change_password" element={<ChangePassword />} />
+        <Route path="change_password" element={<ChangePassword userLogin={userLogin} />} />
         <Route path='edit_hostel/:hId' element = {<EditHostel hostelList = {hostel?.data} />} />
         <Route path='room/:rhId' element = {<ViewListRoom statusMapping = {statusMapping} />} />
         <Route path='room_detail/:roomId' element = {<ViewDetailRoom utilities={utilities} statusMapping = {statusMapping} />} />
