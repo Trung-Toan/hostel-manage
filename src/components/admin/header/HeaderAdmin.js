@@ -11,6 +11,7 @@ import {
   PersonCircle,
   BoxArrowRight,
   ClipboardData,
+  LockFill,
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -52,6 +53,10 @@ const AdminHeader = () => {
                 <ClipboardData className="me-2" />
                 Thông tin cá nhân
               </Dropdown.Item>
+              <Dropdown.Item as={Link} to={`/${urlPart}/change_password`}>
+                    <LockFill className="me-2" />
+                    Thay đổi mật khẩu
+                  </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item onClick={onLogout}>
                 <BoxArrowRight className="me-2" />

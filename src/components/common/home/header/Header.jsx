@@ -15,6 +15,7 @@ import {
   BoxArrowRight,
   Receipt,
   InfoCircle,
+  LockFill,
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -96,6 +97,10 @@ const Header = () => {
                   <Dropdown.Item as={Link} to="list_invoice">
                     <Receipt className="me-2" />
                     Xem hóa đơn thanh toán
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="change_password">
+                    <LockFill className="me-2" />
+                    Thay đổi mật khẩu
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={onLogout}>
