@@ -12,7 +12,7 @@ import Loading from "../../until/Loading";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Notification from "../../Notification";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const ViewListUltility = ({ data, isloading }) => {
   const [updateMessage, setUpdateMessage] = useState(null);
@@ -20,6 +20,9 @@ const ViewListUltility = ({ data, isloading }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [sortOrder, setSortOrder] = useState("");
   const queryClient = useQueryClient();
+  const location = useLocation();
+
+  const urlPath = (location.pathname.includes("manager")) ? "manager" : "admin";
 
   useEffect(() => {
     setFilteredData(data?.data || []);
@@ -66,9 +69,14 @@ const ViewListUltility = ({ data, isloading }) => {
         updateMessage={updateMessage}
         setUpdateMessage={setUpdateMessage}
       />
+      <div className="d-flex justify-content-center mb-5">
+        <Link to={`/${urlPath}/create_utilities`} className="btn btn-success">
+          Tạo tiện ích mới
+        </Link>
+      </div>
       <h2 className="text-center">Quản lý tiện ích</h2>
       <div className="d-flex justify-content-between align-items-center mt-4">
-        <InputGroup style={{width: "30%"}}>
+        <InputGroup style={{ width: "30%" }}>
           <Form.Control
             type="text"
             placeholder="Tìm kiếm theo tên..."
@@ -113,37 +121,51 @@ const ViewListUltility = ({ data, isloading }) => {
             </tr>
           </thead>
           <tbody className="text-center">
-            {filteredData?.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
-                <td>{item.description}</td>
-                <td>
-                  {item.status === 1 ? (
-                    <span className="text-success">Hoạt động</span>
-                  ) : (
-                    <span className="text-danger">Không hoạt động</span>
-                  )}
-                </td>
-                <td>
-                  <Row className="justify-content-center">
-                    <Col xs={"auto"} className="justify-content-start">
-                      <Button
-                        variant={item.status === 1 ? "secondary" : "success"}
-                        onClick={() =>
-                          mutate({ ...item, status: item.status === 1 ? 0 : 1 })
-                        }
-                      >
-                        {item.status === 1 ? "Không hoạt động" : "Hoạt động"}
-                      </Button>
-                    </Col>
-                    <Col xs={"auto"} className="justify-content-end">
-                      <Link className="btn btn-warning" to={`edit_ultility/${item.id}`}>Chỉnh sửa</Link>
-                    </Col>
-                  </Row>
-                </td>
+            {filteredData && filteredData.length > 0 ? (
+              filteredData?.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.description}</td>
+                  <td>
+                    {item.status === 1 ? (
+                      <span className="text-success">Hoạt động</span>
+                    ) : (
+                      <span className="text-danger">Không hoạt động</span>
+                    )}
+                  </td>
+                  <td>
+                    <Row className="justify-content-center">
+                      <Col xs={"auto"} className="justify-content-start">
+                        <Button
+                          variant={item.status === 1 ? "secondary" : "success"}
+                          onClick={() =>
+                            mutate({
+                              ...item,
+                              status: item.status === 1 ? 0 : 1,
+                            })
+                          }
+                        >
+                          {item.status === 1 ? "Không hoạt động" : "Hoạt động"}
+                        </Button>
+                      </Col>
+                      <Col xs={"auto"} className="justify-content-end">
+                        <Link
+                          className="btn btn-warning"
+                          to={`edit_ultility/${item.id}`}
+                        >
+                          Chỉnh sửa
+                        </Link>
+                      </Col>
+                    </Row>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className="text-center">
+                <td colSpan="5">Tiện ích trống</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </Table>
       )}

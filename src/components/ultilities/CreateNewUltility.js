@@ -8,7 +8,7 @@ import {
   Spinner,
   Alert,
 } from "react-bootstrap";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -43,11 +43,11 @@ const CreateNewUltility = () => {
         type: "success",
         text: `${
           pathUltility
-            ? "Cập nhật tiện ích thành công!" 
+            ? "Cập nhật tiện ích thành công!"
             : "Thêm tiện ích mới thành công!"
         } `,
       });
-      setTimeout(() => navigate(-1), 2000);
+      setTimeout(() => navigate(-1), 500);
       queryClient.invalidateQueries(["utilities"]);
     },
     onError: () => {
@@ -56,7 +56,7 @@ const CreateNewUltility = () => {
         text: `${
           pathUltility
             ? "Có lỗi xảy ra khi cập nhật tiện ích!"
-            : "Có lỗi xảy ra khi thêm tiện ích mới!" 
+            : "Có lỗi xảy ra khi thêm tiện ích mới!"
         } `,
       });
     },

@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import HomePageAdmin from "../components/admin/HomePageAdmin";
 import ViewPort from "../components/common/viewPort/ViewPort";
-import { useGetAllPosts, useGetDataByUrl } from "../fetchData/DataFetch";
+import { useGetDataByUrl } from "../fetchData/DataFetch";
 import Information from "../components/common/information/Information";
 import EditInformation from "../components/common/information/EditInformation";
 import CreateNewPost from "../components/common/viewPort/CreateNewPost";
@@ -20,15 +20,14 @@ import EditInvoice from "../components/invoice/EditInvoice";
 import ChangePassword from "../components/common/password/ChangePassword";
 
 const RouteManager = ({userLogin }) => {
-  const { posts, loadingPost } = useGetAllPosts();
+  const {data: posts, isLoading:loadingPost} = useGetDataByUrl("http://localhost:9999/post", "post");
   const {data: invoice, isLoading:loadingInvoice} = useGetDataByUrl("http://localhost:9999/invoice", "invoice");
   const {data: category, isLoading:loadingCategory} = useGetDataByUrl("http://localhost:9999/category", "category");
   const {data: utilities, isLoading:loadingUtilities} = useGetDataByUrl("http://localhost:9999/utilities", "utilities");
-
   return (
     <Routes>
       <Route path="/" element={<HomePageAdmin userLogin={userLogin} />}>
-        <Route index element={ <ViewPort posts={posts} loadingPost={loadingPost} userLogin={userLogin} /> } />
+        <Route index element={ <ViewPort posts={posts?.data} loadingPost={loadingPost} userLogin={userLogin} /> } />
         <Route path="information" element={<Information userLogin={userLogin} />} />
         <Route path="information/edit_information" element={<EditInformation userLogin={userLogin} />} />
         <Route path="change_password" element={<ChangePassword userLogin={userLogin}/>} />

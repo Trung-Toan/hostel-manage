@@ -1,3 +1,5 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import React, { memo, useEffect, useState } from "react";
 import {
   Card,
@@ -10,9 +12,29 @@ import {
   Badge,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Notification from "../../../Notification";
 
-const ViewPort = ({ posts, userLogin, loadingPost, onDelete }) => {
+const ViewPort = ({ posts, userLogin, loadingPost }) => {
   const [viewPost, setViewPost] = useState([]);
+  const [updateMessage, setUpdateMessage] = useState(null);
+
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: (id) => axios.delete(`http://localhost:9999/post/${id}`),
+    onSuccess: () => {
+      setUpdateMessage({
+        type: "success",
+        text: "Xoá bài post thành công!",
+      });
+      queryClient.invalidateQueries("post");
+    },
+    onError: () => {
+      setUpdateMessage({
+        type: "error",
+        text: "Có lỗi xảy ra khi xoá bài post!",
+      });
+    },
+  });
 
   useEffect(() => {
     if (!loadingPost) {
@@ -26,6 +48,10 @@ const ViewPort = ({ posts, userLogin, loadingPost, onDelete }) => {
 
   return (
     <Container>
+      <Notification
+        updateMessage={updateMessage}
+        setUpdateMessage={setUpdateMessage}
+      />
       {/* Nút Thêm mới bài viết */}
       <div
         className={`text-center my-4 ${userLogin?.role !== 2 ? "d-none" : ""}`}
@@ -42,7 +68,7 @@ const ViewPort = ({ posts, userLogin, loadingPost, onDelete }) => {
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         </div>
-      ) : (
+      ) : viewPost && viewPost.length > 0 ? (
         viewPost?.map((p) => (
           <Card
             key={p.id}
@@ -78,14 +104,14 @@ const ViewPort = ({ posts, userLogin, loadingPost, onDelete }) => {
               </Card.Text>
 
               {/* Images */}
-              {p.images && (
+              {(p.images && p.images.length > 0) && (
                 <div className="d-flex flex-wrap justify-content-center mb-3">
                   <Image
                     src={p.images}
                     alt={p.title}
                     className="mb-2"
                     style={{
-                      height: "300px", 
+                      height: "300px",
                       objectFit: "cover",
                       borderRadius: "8px",
                     }}
@@ -101,17 +127,17 @@ const ViewPort = ({ posts, userLogin, loadingPost, onDelete }) => {
                 <Link className="btn btn-warning" to={`/manager/edit/${p.id}`}>
                   Chỉnh sửa
                 </Link>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => onDelete(p.id)}
-                >
-                  Xóa
+                <Button variant="danger" size="sm" onClick={() => mutate(p.id)}>
+                  {isLoading ? "Đang xoá..." : "Xóa"}
                 </Button>
               </div>
             </Card.Body>
           </Card>
         ))
+      ) : (
+        <p className="text-center">
+          Chưa có phòng trọ nào được tạo. Hãy thêm tài khoản mới ngay bây giờ!
+        </p>
       )}
     </Container>
   );

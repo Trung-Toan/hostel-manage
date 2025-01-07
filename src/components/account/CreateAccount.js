@@ -163,7 +163,7 @@ const CreateAccount = ({ userLogin }) => {
   return (
     <Container className="mt-4">
       <h2 className="text-center mb-4">
-        Tạo tài khoản {userLogin.role === 1 ? "Manager" : "User"}
+        Tạo tài khoản {userLogin.role === 1 ? "Manager" : "Customer"}
       </h2>
       <Form onSubmit={formik.handleSubmit}>
         {/* Họ và tên */}

@@ -28,7 +28,7 @@ const AddNewHostel = () => {
         type: "success",
         text: "Thêm nhà trọ mới thành công!",
       });
-      setTimeout(() => navigate(-1), 2000);
+      setTimeout(() => navigate(-1), 500);
       queryClient.invalidateQueries(["hostels"]);
     },
     onError: () => {

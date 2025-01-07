@@ -11,6 +11,7 @@ import axios from "axios";
 import Notification from "../../../src/Notification";
 import ViewInvoiceByHostel from "./ViewInvoiceByHostel";
 import getCurrentDateTime from "../../until/getCurrentDate";
+import { Link, useLocation } from "react-router-dom";
 
 const ViewListInvoice = ({ data, isLoading }) => {
   const [updateMessage, setUpdateMessage] = useState(null);
@@ -79,12 +80,21 @@ const ViewListInvoice = ({ data, isLoading }) => {
     return acc;
   }, {});
 
+  const location = useLocation();
+
+  const urlPath = (location.pathname.includes("manager")) ? "manager" : "admin";
+
   return (
     <div className="container mt-4">
       <Notification
         updateMessage={updateMessage}
         setUpdateMessage={setUpdateMessage}
       />
+      <div className="d-flex justify-content-center mb-5">
+        <Link to={`/${urlPath}/create_invoice`} className="btn btn-success">
+          Tạo hoá đơn mới
+        </Link>
+      </div>
       <h2 className="text-center mb-4">Quản lý hóa đơn</h2>
 
       {/* Tìm kiếm và Sắp xếp */}
@@ -137,7 +147,7 @@ const ViewListInvoice = ({ data, isLoading }) => {
           ))}
         </Accordion>
       ) : (
-        <div className="text-center">Không có dữ liệu để hiển thị.</div>
+        <div className="text-center">Danh sách trống</div>
       )}
     </div>
   );

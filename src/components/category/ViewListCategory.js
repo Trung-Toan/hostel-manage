@@ -90,7 +90,7 @@ const ViewListCategory = ({ data, isLoading }) => {
       {/* Tìm kiếm và Sắp xếp */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         {/* Thanh tìm kiếm */}
-        <InputGroup style={{width: "30%"}}>
+        <InputGroup style={{ width: "30%" }}>
           <Form.Control
             type="text"
             placeholder="Tìm kiếm theo tên..."
@@ -119,7 +119,7 @@ const ViewListCategory = ({ data, isLoading }) => {
 
       {/* Danh sách danh mục dưới dạng bảng */}
       {isLoading ? (
-        <Loading/>
+        <Loading />
       ) : (
         <Table
           striped
@@ -137,54 +137,64 @@ const ViewListCategory = ({ data, isLoading }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredData?.map((category) => (
-              <tr key={category.id} className="text-center">
-                <td className="col-md-2 fw-bold">{category.name}</td>
-                <td className="col-md text-muted text-truncate">
-                  {category.description}
-                </td>
-                <td className="col-md-1">
-                  <Badge
-                    bg={category.status === 1 ? "success" : "secondary"}
-                    className="py-2 px-3 text-uppercase"
-                  >
-                    {category.status === 1 ? "Hoạt động" : "Không hoạt động"}
-                  </Badge>
-                </td>
-                <td className="col-md-2">
-                  <Row className="g-2 justify-content-center">
-                    <Col xs="auto">
-                      <Link
-                        className="btn btn-outline-warning btn-sm px-3"
-                        to={`edit_category/${category.id}`}
-                      >
-                        <i className="fas fa-edit me-1"></i> Chỉnh sửa
-                      </Link>
-                    </Col>
-                    <Col xs="auto">
-                      <Button
-                        type="button"
-                        variant={
-                          category.status === 1
-                            ? "outline-danger"
-                            : "outline-success"
-                        }
-                        size="sm"
-                        onClick={() => changeStatus(category)}
-                        className="px-3"
-                      >
-                        <i
-                          className={`fas ${
-                            category.status === 1 ? "fa-ban" : "fa-check"
-                          } me-1`}
-                        ></i>
-                        {category.status === 1 ? "Dừng hoạt động" : "Hoạt động"}
-                      </Button>
-                    </Col>
-                  </Row>
+            {filteredData && filteredData.length > 0 ? (
+              filteredData?.map((category) => (
+                <tr key={category.id} className="text-center">
+                  <td className="col-md-2 fw-bold">{category.name}</td>
+                  <td className="col-md text-muted text-truncate">
+                    {category.description}
+                  </td>
+                  <td className="col-md-1">
+                    <Badge
+                      bg={category.status === 1 ? "success" : "secondary"}
+                      className="py-2 px-3 text-uppercase"
+                    >
+                      {category.status === 1 ? "Hoạt động" : "Không hoạt động"}
+                    </Badge>
+                  </td>
+                  <td className="col-md-2">
+                    <Row className="g-2 justify-content-center">
+                      <Col xs="auto">
+                        <Link
+                          className="btn btn-outline-warning btn-sm px-3"
+                          to={`edit_category/${category.id}`}
+                        >
+                          <i className="fas fa-edit me-1"></i> Chỉnh sửa
+                        </Link>
+                      </Col>
+                      <Col xs="auto">
+                        <Button
+                          type="button"
+                          variant={
+                            category.status === 1
+                              ? "outline-danger"
+                              : "outline-success"
+                          }
+                          size="sm"
+                          onClick={() => changeStatus(category)}
+                          className="px-3"
+                        >
+                          <i
+                            className={`fas ${
+                              category.status === 1 ? "fa-ban" : "fa-check"
+                            } me-1`}
+                          ></i>
+                          {category.status === 1
+                            ? "Dừng hoạt động"
+                            : "Hoạt động"}
+                        </Button>
+                      </Col>
+                    </Row>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className="text-center">
+                <td colSpan="4">
+                  Danh mục trống
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </Table>
       )}

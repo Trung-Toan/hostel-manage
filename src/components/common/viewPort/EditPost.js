@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Form, Button, Alert, Row, Col } from "react-bootstrap";
@@ -143,7 +143,6 @@ const EditPost = () => {
             <Form.Label>Hình ảnh</Form.Label>
             <Form.Control
               type="file"
-              multiple
               accept="image/jpeg, image/jpg, image/png"
               onChange={handleImageUpload}
             />

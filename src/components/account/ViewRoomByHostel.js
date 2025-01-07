@@ -1,22 +1,17 @@
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import { Form } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const ViewRoomByHostel = ({
-  handleChangeRoom, 
+  handleChangeRoom,
   account,
   accountId,
-  hId ,
+  hId,
   rId,
-  handleChangeLoadingRoom,
-  handleChangeErrorRoom,
 }) => {
-  const {
-    data: room,
-    isLoading: isLoadRoom,
-    error: errorRoom,
-  } = useQuery({
+  // Fetch danh sách phòng dựa trên hostelId
+  const { data: room } = useQuery({
     queryFn: () => axios.get(`http://localhost:9999/room?hostelId=` + hId),
     queryKey: [`room_h_${hId}`],
     staleTime: 10000,
@@ -24,22 +19,19 @@ const ViewRoomByHostel = ({
     retry: 0,
   });
 
+  // Lọc ra danh sách phòng có trạng thái "active"
   const fiterRoom = room?.data?.filter((r) => r.status === 1);
 
-  useEffect(() => {
-    if (!isLoadRoom) {
-      handleChangeRoom(account, accountId, rId || room?.data[0]?.id);
-      handleChangeErrorRoom(errorRoom);
-      handleChangeLoadingRoom(isLoadRoom);
-    }
-  }, [errorRoom, handleChangeErrorRoom, handleChangeLoadingRoom, isLoadRoom]);
-
-  
-
   return (
-    <Form.Select 
-        aria-label="Default select example" 
-        onChange={(e) => handleChangeRoom(account, accountId, e.target.value)}
+    <Form.Select
+      aria-label="Default select example"
+      onChange={(e) => {
+        const selectedRoomId = e.target.value;
+        if (selectedRoomId !== rId) {
+          // Chỉ gọi handleChangeRoom khi ID phòng mới khác ID phòng hiện tại
+          handleChangeRoom(account, accountId, selectedRoomId);
+        }
+      }}
     >
       {fiterRoom?.map((r) => (
         <option selected={r.id === rId} key={r.id} value={r.id}>

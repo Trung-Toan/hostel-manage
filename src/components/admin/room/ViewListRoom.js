@@ -170,7 +170,12 @@ const ViewListRoom = ({ statusMapping }) => {
                   </Card.Body>
                 </Card>
               </Col>
-            ))}
+            )) || (
+              <p>
+                Chưa có phòng trọ nào được tạo. Hãy thêm tài khoản mới ngay
+                bây giờ!
+              </p>
+            )}
           </Row>
         </Container>
       )}

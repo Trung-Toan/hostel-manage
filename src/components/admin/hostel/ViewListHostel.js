@@ -81,7 +81,7 @@ const ViewListHostel = ({ data, isLoading }) => {
         updateMessage={updateMessage}
         setUpdateMessage={setUpdateMessage}
       />
-      <div className="d-flex justify-content-center mb-5 mt-5">
+      <div className="d-flex justify-content-center mb-5">
         <Link to={"/admin/create_hostel"} className="btn btn-success">
           Tạo phòng trọ mới
         </Link>
@@ -91,7 +91,7 @@ const ViewListHostel = ({ data, isLoading }) => {
       {/* Tìm kiếm và Sắp xếp */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         {/* Thanh tìm kiếm */}
-        <InputGroup className="w-50">
+        <InputGroup style={{width: "30%"}}>
           <Form.Control
             type="text"
             placeholder="Tìm kiếm theo tên..."
@@ -125,7 +125,7 @@ const ViewListHostel = ({ data, isLoading }) => {
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         </div>
-      ) : (
+      ) : filteredData && filteredData.length > 0 ? (
         <Row
           xs={1}
           sm={2}
@@ -133,7 +133,7 @@ const ViewListHostel = ({ data, isLoading }) => {
           lg={4}
           className="d-flex justify-content-center"
         >
-          {filteredData?.map((hostel) => (
+          {  filteredData?.map((hostel) => (
             <Col key={hostel.id} className="mb-4">
               <Card className="h-100 shadow-sm position-relative">
                 {/* Dropdown */}
@@ -207,8 +207,14 @@ const ViewListHostel = ({ data, isLoading }) => {
                 </Card.Footer>
               </Card>
             </Col>
-          ))}
+          )) }
         </Row>
+      ) : (
+        <div className="d-flex justify-content-center">
+          <p>
+            Danh sách trống!
+          </p>
+        </div>
       )}
     </div>
   );

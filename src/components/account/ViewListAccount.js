@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import ViewRoomByHostel from "./ViewRoomByHostel";
 import getCurrentDateTime from "../../until/getCurrentDate";
 import Notification from "../../Notification";
+import { Link } from "react-router-dom";
 
 const ViewListAccount = ({ userLogin }) => {
   const [accounts, setAccounts] = useState([]);
@@ -242,8 +243,6 @@ const ViewListAccount = ({ userLogin }) => {
     );
   }
 
-  console.log(updateMessage);
-
   return (
     <Container className="mt-5 p-1">
       <Notification
@@ -445,9 +444,14 @@ const ViewListAccount = ({ userLogin }) => {
           </tbody>
         </Table>
       ) : (
-        <Alert variant="info" className="col-md-1 text-center">
-          Không có tài khoản nào phù hợp để hiển thị.
-        </Alert>
+        <div className="text-center mt-5">
+          <p>
+            Chưa có tài khoản nào được tạo. Hãy thêm tài khoản mới ngay bây giờ!
+          </p>
+          <Link to={"/manager/create_account"} className="btn btn-primary">
+            Thêm tài khoản mới
+          </Link>
+        </div>
       )}
     </Container>
   );
