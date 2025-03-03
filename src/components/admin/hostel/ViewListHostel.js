@@ -187,15 +187,16 @@ const ViewListHostel = ({ data, isLoading }) => {
                         : hostel.description}
                     </small>
                   </Card.Text>
-                </Card.Body>
-
-                {/* Footer */}
-                <Card.Footer className="d-flex justify-content-between align-items-center">
                   {/* Badge trạng thái */}
                   <Badge bg={hostel.status === 1 ? "success" : "secondary"}>
                     {hostel.status === 1 ? "Hoạt động" : "Không hoạt động"}
                   </Badge>
                   {/* Nút Xem phòng trọ */}
+                </Card.Body>
+
+                {/* Footer */}
+                <Card.Footer className="d-flex justify-content-between align-items-center">
+                  <Link to={`edit_hostel/${hostel.id}`} className="btn btn-warning btn-sm" size="sm">Sửa thông tin</Link>
                   <Button
                     variant="primary"
                     size="sm"

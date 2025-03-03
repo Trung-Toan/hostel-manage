@@ -9,7 +9,7 @@ const ChooseRoom = ({ hostelId, selectedRoom, setSelectedRoom }) => {
     `room_h_${hostelId}`
   );
 
-  const fiterRoom = room?.data?.filter((r) => r.status === 1);
+  const fiterRoom = room?.data?.filter((r) => r.status !== 3 );
 
   useEffect(() => {
     if (fiterRoom && fiterRoom?.length > 0) {

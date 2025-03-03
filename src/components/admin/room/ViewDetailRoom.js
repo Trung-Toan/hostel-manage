@@ -48,7 +48,7 @@ const ViewDetailRoom = ({ utilities, statusMapping }) => {
         type: "success",
         text: "Cập nhật thông tin phòng thành công!",
       });
-      setTimeout(() => navigate(-1), 2000);
+      setTimeout(() => navigate(-1), 500);
       queryClient.invalidateQueries(["roomDetail", roomId]);
       queryClient.refetchQueries(["rooms"]);
     },

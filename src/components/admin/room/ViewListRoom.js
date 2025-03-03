@@ -97,7 +97,8 @@ const ViewListRoom = ({ statusMapping }) => {
           </div>
           <h3 className="text-center mb-4">Danh sách phòng</h3>
           <Row className="g-4 d-flex justify-content-center">
-            {roomList?.map((room) => (
+            { (roomList && roomList.length > 0) ?
+            roomList?.map((room) => (
               <Col md={6} lg={3} key={room.id}>
                 <Card className="shadow-sm position-relative">
                   <Dropdown className="position-absolute top-0 end-0 m-2">
@@ -170,10 +171,9 @@ const ViewListRoom = ({ statusMapping }) => {
                   </Card.Body>
                 </Card>
               </Col>
-            )) || (
-              <p>
-                Chưa có phòng trọ nào được tạo. Hãy thêm tài khoản mới ngay
-                bây giờ!
+            )) : (
+              <p className="text-center">
+                Danh sách trống!
               </p>
             )}
           </Row>

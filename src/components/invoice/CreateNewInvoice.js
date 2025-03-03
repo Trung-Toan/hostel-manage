@@ -19,6 +19,7 @@ import axios from "axios";
 import { useGetDataByUrl } from "../../fetchData/DataFetch";
 import getCurrentDateTime from "../../until/getCurrentDate";
 import getMonth from "../../until/getMonth";
+import Swal from "sweetalert2";
 
 const CreateNewInvoice = () => {
   const [selectedHostel, setSelectedHostel] = useState(null);
@@ -62,12 +63,26 @@ const CreateNewInvoice = () => {
         type: "success",
         text: "Tạo hoá đơn thành công!",
       });
+      Swal.fire({
+        icon: "success",
+        title: "Thành công!",
+        text: "Tạo hoá đơn thành công!",
+        timer: 3000,
+        showConfirmButton: false,
+      });
       queryClient.invalidateQueries(["invoice"]);
     },
     onError: () => {
       setCreationMessage({
         type: "error",
         text: "Có lỗi xảy ra khi tạo hoá đơn!",
+      });
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi!",
+        text: "Có lỗi xảy ra khi tạo hoá đơn!",
+        timer: 3000,
+        showConfirmButton: false,
       });
     },
   });
@@ -470,5 +485,4 @@ const CreateNewInvoice = () => {
     </div>
   );
 };
-
 export default memo(CreateNewInvoice);

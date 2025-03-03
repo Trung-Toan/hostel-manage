@@ -43,14 +43,13 @@ const EditHostel = ({ hostelList }) => {
 
   const queryClient = useQueryClient();
   const { mutate, isLoading: updatingHostel } = useMutation({
-    mutationFn: (payload) =>
-      axios.put(`http://localhost:9999/hostel/${hId}`, payload),
+    mutationFn: (payload) => axios.put(`http://localhost:9999/hostel/${hId}`, payload),
     onSuccess: () => {
       setUpdateMessage({
         type: "success",
         text: "Cập nhật nhà trọ thành công!",
       });
-      setTimeout(() => navigate(-1), 2000);
+      setTimeout(() => navigate(-1), 500);
       queryClient.invalidateQueries(["hostelDetail" + hId]);
       queryClient.refetchQueries(["hostel"]);
     },

@@ -320,7 +320,7 @@ const HomePageAdmin = ({ isLogin, userLogin }) => {
           )}
 
           {/* Quản lý danh mục (category) */}
-          {(userLogin?.role === 2 || userLogin?.role === 1) && (
+          {/* {(userLogin?.role === 2 || userLogin?.role === 1) && (
             <>
               <ListItem disablePadding>
                 <ListItemButton
@@ -358,7 +358,7 @@ const HomePageAdmin = ({ isLogin, userLogin }) => {
                 </List>
               </Collapse>
             </>
-          )}
+          )} */}
         </List>
         <Divider />
       </Drawer>

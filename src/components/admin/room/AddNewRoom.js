@@ -30,7 +30,7 @@ const AddNewRoom = ({utilities}) => {
         type: "success",
         text: "Thêm phòng mới thành công!",
       });
-      setTimeout(() => navigate(-1), 2000);
+      setTimeout(() => navigate(-1), 500);
       queryClient.invalidateQueries(["rooms"]);
     },
     onError: () => {
@@ -46,11 +46,10 @@ const AddNewRoom = ({utilities}) => {
       name: "",
       price: 0,
       description: "",
-      status: 1,
+      status: 0,
       images: [],
       area: 0,
       utilities: [],
-      currentOccupants: 0,
     },
 
     validationSchema: Yup.object({
@@ -72,10 +71,6 @@ const AddNewRoom = ({utilities}) => {
       utilities: Yup.array()
         .min(1, "Bạn phải chọn ít nhất một tiện ích.")
         .required("Trường này là bắt buộc."),
-      currentOccupants: Yup.number("Bạn phải nhập 1 số")
-        .required("Ban không được bỏ trống trường này")
-        .min(0, "Số lượng người ở không được bé hơn 0")
-        .max(5, "Số lượng người ở không được vượt quá 5 người"),
     }),
     onSubmit: (values) => {
       const payload = {
@@ -185,39 +180,6 @@ const AddNewRoom = ({utilities}) => {
                 </Form.Group>
               </Col>
             </Row>
-
-            <Row>
-              <Col>
-                <Form.Group controlId="currentOccupants" className="mb-3">
-                  <Form.Label>Số người ở</Form.Label>
-                  <InputGroup>
-                    <Form.Control
-                      type="number"
-                      {...formik.getFieldProps("currentOccupants")}
-                      placeholder="Nhập số lượng người ở"
-                      isInvalid={
-                        formik.touched.currentOccupants &&
-                        formik.errors.currentOccupants
-                      }
-                    />
-                    <span className="bg-secondary p-2">người</span>
-                    <Form.Control.Feedback type="invalid">
-                      {formik.errors.currentOccupants}
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-              </Col>
-              <Col>
-                {/* status */}
-                <Form.Group controlId="status" className="mb-3">
-                  <Form.Label>Trạng thái</Form.Label>
-                  <Form.Select {...formik.getFieldProps("status")}>
-                    <option value={1}>Hoạt động</option>
-                    <option value={0}>Không hoạt động</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
             <Form.Group controlId="utilities" className="mb-3">
               <Form.Label>Tiện ích</Form.Label>
               <div>
@@ -305,6 +267,20 @@ const AddNewRoom = ({utilities}) => {
                 onChange={(event) => handleImageUpload(event)}
               />
             </Form.Group>
+            {/* status */}
+            <Row>
+              <Col>
+                <Form.Group controlId="status" className="mb-3">
+                  <Form.Label>Trạng thái</Form.Label>
+                  <Form.Select {...formik.getFieldProps("status")}>
+                    <option value={0}>Chưa ai ở</option>
+                    <option value={1}>Đã có người ở</option>
+                    <option value={2}>Phòng đã đặt cọc</option>
+                    <option value={3}>Cấm hoạt động</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
             {/* submit */}
             <div className="text-center mb-4">
               <Button variant="primary" type="submit" disabled={creatingRoom}>

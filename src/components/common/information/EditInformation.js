@@ -88,7 +88,7 @@ const EditInformation = ({ userLogin }) => {
   });
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 mb-3">
       {/* Component thông báo */}
       <Notification
         updateMessage={updateMessage}
@@ -96,8 +96,8 @@ const EditInformation = ({ userLogin }) => {
       />
 
       <Row className="justify-content-center">
-        <Col md={8}>
-          <Card className="shadow-sm border-0">
+        <Col md={8} >
+          <Card className="shadow border-0 shadow">
             <Card.Body>
               <Button
                 as={Link}
@@ -150,27 +150,7 @@ const EditInformation = ({ userLogin }) => {
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
-                  <Col>
-                    {/* Username */}
-                    <Form.Group className="mb-3">
-                      <Form.Label>Username</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="username"
-                        value={formik.values.username}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        isInvalid={
-                          formik.touched.username && !!formik.errors.username
-                        }
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {formik.errors.username}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
                 </Row>
-
                 <Row>
                   <Col>
                     {/* Email */}

@@ -8,7 +8,7 @@ const Information = ({ userLogin }) => {
   const user = userLogin;
 
   const renderRole = (role) => {
-    return role === 0 ? "User" : "Admin";
+    return role === 0 ? "User" : role === 1 ? "Owner" : "Manager";
   };
 
   const renderStatus = (status) => {
@@ -16,7 +16,7 @@ const Information = ({ userLogin }) => {
   };
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 ">
       <Button
         variant="outline-info"
         onClick={() => navigate(-1)}
@@ -24,9 +24,9 @@ const Information = ({ userLogin }) => {
       >
         Trở về
       </Button>
-      <Row className="justify-content-center">
+      <Row className="justify-content-center ">
         <Col md={8}>
-          <Card className="shadow-sm border-0">
+          <Card className="shadow border-0">
             <Card.Body>
               {/* Header */}
               <Row className="align-items-center">

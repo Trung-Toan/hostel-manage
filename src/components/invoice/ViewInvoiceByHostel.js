@@ -1,6 +1,8 @@
 import React from "react";
 import { Accordion, Badge, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import NameHostel from "./NameHostel";
+import NameRoom from "./NameRoom";
 
 const ViewInvoiceByHostel = ({ invoices = [], changeStatus }) => {
   const groupInvoiceByHostel = invoices?.reduce((acc, invoice) => {
@@ -9,6 +11,9 @@ const ViewInvoiceByHostel = ({ invoices = [], changeStatus }) => {
     acc[hostelId].push(invoice);
     return acc;
   }, {});
+
+  console.log(groupInvoiceByHostel);
+
   return (
     <>
       {groupInvoiceByHostel && Object.keys(groupInvoiceByHostel).length > 0 ? (
@@ -17,7 +22,7 @@ const ViewInvoiceByHostel = ({ invoices = [], changeStatus }) => {
             return (
               <>
                 <Accordion.Item eventKey={hostelId} key={hostelId}>
-                  <Accordion.Header>Nhà trọ: {hostelId}</Accordion.Header>
+                  <NameHostel hostelId = {hostelId} />
                   <Accordion.Body>
                     <Table striped bordered hover responsive>
                       <thead className="table-dark ">
@@ -31,7 +36,7 @@ const ViewInvoiceByHostel = ({ invoices = [], changeStatus }) => {
                       <tbody>
                         {invoices?.map((invoice) => (
                           <tr key={invoice.id} className="text-center">
-                            <td>{invoice.roomId}</td>
+                            <NameRoom roomId = {invoice.roomId} />
                             <td>
                               <Badge
                                 bg={
@@ -45,7 +50,9 @@ const ViewInvoiceByHostel = ({ invoices = [], changeStatus }) => {
                                   : "Chưa thanh toán"}
                               </Badge>
                             </td>
-                            <td>{invoice?.totalAmount?.toLocaleString()} VND</td>
+                            <td>
+                              {invoice?.totalAmount?.toLocaleString()} VND
+                            </td>
                             <td className="d-flex justify-content-center">
                               <Button
                                 variant={
@@ -61,7 +68,12 @@ const ViewInvoiceByHostel = ({ invoices = [], changeStatus }) => {
                                   ? "Hủy thanh toán"
                                   : "Xác nhận thanh toán"}
                               </Button>
-                              <Link className="btn btn-outline-warning" to={"/manager/invoice/" + invoice.id}>Xem chi tiết</Link>
+                              <Link
+                                className="btn btn-outline-warning"
+                                to={"/manager/invoice/" + invoice.id}
+                              >
+                                Xem chi tiết
+                              </Link>
                             </td>
                           </tr>
                         ))}
